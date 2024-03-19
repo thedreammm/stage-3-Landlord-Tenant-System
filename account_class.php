@@ -1,17 +1,12 @@
 <?php
-function getAccountSeed(){
-    $encryption_keys = file_get_contents('keys.json');
-    $account_seed = json_decode($encryption_keys)->Accounts;
-    return $account_seed;
-}
+require_once("databaseEntity_class.php");
 
-
-Class Account{
-    public $account_id, $username, $fname, $lname, $email, $password, $account_type, $account_seed, $iv;
+Class Account extends DatabaseEntity{
+    public $account_id, $username, $fname, $lname, $email, $password, $account_type, $verified;
     
     function __construct($params){
+        parent::__construct("Accounts");
         $this->unpack($params);
-        $this->account_seed = getAccountSeed();
     }
 
     function loadAccount(){
@@ -27,6 +22,7 @@ Class Account{
             $row = $result->fetchArray();
             
             $this->decryptValues($row);
+            return true;
         }
         else if($this->username && $this->password){
             $db = new SQLite3('database.db');
@@ -34,7 +30,7 @@ Class Account{
 
             $stmt = $db->prepare($sql);
 
-            $username = $this->encryptUsername($this->username);
+            $username = $this->encryptUnique($this->username);
             $stmt->bindParam(':username', $username, SQLITE3_TEXT);
             $result = $stmt->execute();
 
@@ -64,18 +60,19 @@ Class Account{
             return false;
         }
         $db = new SQLite3('database.db');
-        $sql = 'INSERT INTO Accounts(username, fname, lname, email, password, account_type, iv) VALUES(:username, :fname, :lname, :email, :password, :account_type, :iv)';
+        $sql = 'INSERT INTO Accounts(username, fname, lname, email, password, account_type, verified, iv) VALUES(:username, :fname, :lname, :email, :password, :account_type, :verified, :iv)';
 
         $stmt = $db->prepare($sql);
 
         $iv = openssl_random_pseudo_bytes(16);
         $this->iv = $iv;
-        $username = $this->encryptUsername($this->username);
+        $username = $this->encryptUnique($this->username);
         $fname = $this->encrypt($this->fname);
         $lname = $this->encrypt($this->lname);
         $email = $this->encrypt($this->email);
         $password = $this->encryptPassword($this->password);
         $account_type = $this->encrypt($this->account_type);
+        $verified = 0;
 
         $stmt->bindParam(':username', $username, SQLITE3_TEXT);
         $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
@@ -83,6 +80,7 @@ Class Account{
         $stmt->bindParam(':email', $email, SQLITE3_TEXT);
         $stmt->bindParam(':password', $password, SQLITE3_TEXT);
         $stmt->bindParam(':account_type', $account_type, SQLITE3_TEXT);
+        $stmt->bindParam(':verified', $verified, SQLITE3_INTEGER);
         $stmt->bindParam(':iv', $iv, SQLITE3_TEXT);
         $result = $stmt->execute();
 
@@ -112,34 +110,11 @@ Class Account{
             if(isset($row['account_type'])){
                 $this->account_type = $row['account_type'];
             }
+            if(isset($row['verified'])){
+                $this->verified = $row['verified'];
+            }
             if(isset($row['iv'])){
                 $this->iv = $row['iv'];
-            }
-        }
-    }
-
-    function encryptValues(){
-        if($row){
-            if(isset($row['account_id'])){
-                $this->account_id = $row['account_id'];
-            }
-            if(isset($row['username'])){
-                $this->username = $this->encryptUsername($row['username']);
-            }
-            if(isset($row['fname'])){
-                $this->fname = $this->encrypt($row['fname']);
-            }
-            if(isset($row['lname'])){
-                $this->lname = $this->encrypt($row['lname']);
-            }
-            if(isset($row['email'])){
-                $this->email = $this->encrypt($row['email']);
-            }
-            if(isset($row['password'])){
-                $this->password = $this->encryptPassword($row['password']);
-            }
-            if(isset($row['account_type'])){
-                $this->account_type = $this->encrypt($row['account_type']);
             }
         }
     }
@@ -149,11 +124,15 @@ Class Account{
             if(isset($row['account_id'])){
                 $this->account_id = $row['account_id'];
             }
+            if(isset($row['verified'])){
+                $this->verified = $row['verified'];
+            }
             if(isset($row['iv'])){
                 $this->iv = $row['iv'];
             }
+
             if(isset($row['username'])){
-                $this->username = $this->decryptUsername($row['username']);
+                $this->username = $this->decryptUnique($row['username']);
             }
             if(isset($row['fname'])){
                 $this->fname = $this->decrypt($row['fname']);
@@ -164,30 +143,10 @@ Class Account{
             if(isset($row['email'])){
                 $this->email = $this->decrypt($row['email']);
             }
-            //if(isset($row['password'])){
-            //    $this->password = $this->verifyPassword($row['password']);
-            //}
             if(isset($row['account_type'])){
                 $this->account_type = $this->decrypt($row['account_type']);
             }
-            
         }
-    }
-    function encrypt($value){
-        return openssl_encrypt($value, "aes-128-cbc", $this->account_seed, 0, $this->iv);
-    }
-    function encryptUsername($value){
-        return openssl_encrypt($value, "aes-128-cbc", $this->account_seed, 0, "usernameusername");
-    }
-    function encryptPassword($password){
-        return password_hash($password, PASSWORD_BCRYPT);
-    }
-
-    function decrypt($value){
-        return openssl_decrypt($value, "aes-128-cbc", $this->account_seed, 0, $this->iv);
-    }
-    function decryptUsername($value){
-        return openssl_decrypt($value, "aes-128-cbc", $this->account_seed, 0, "usernameusername");
     }
 }
 
