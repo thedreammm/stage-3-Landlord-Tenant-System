@@ -84,6 +84,17 @@ Class Account extends DatabaseEntity{
         $stmt->bindParam(':iv', $iv, SQLITE3_TEXT);
         $result = $stmt->execute();
 
+        $this->account_id = $db->lastInsertRowID();
+
+        if($this->account_type == 0){
+            $sql = 'INSERT INTO Tenants(account_id) VALUES (:account_id)';
+        }
+        else{
+            $sql = 'INSERT INTO Landlords(account_id) VALUES (:account_id)';
+        }
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
         return true;
     }
 
@@ -150,4 +161,42 @@ Class Account extends DatabaseEntity{
     }
 }
 
+Class Tenant extends Account{
+    public $tenant_id;
+    function __construct($params){
+        parent::__construct($params);
+    }
+
+    function loadAccount(){
+        parent::loadAccount();
+        $db = new SQLite3('database.db');
+        $sql = 'SELECT tenant_id FROM Tenants WHERE account_id=:account_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->tenant_id = $row['tenant_id'];
+        return true;
+    }
+}
+Class Landlord extends Account{
+    public $landlord_id;
+    function __construct($params){
+        parent::__construct($params);
+    }
+
+    function loadAccount(){
+        parent::loadAccount();
+        $db = new SQLite3('database.db');
+        $sql = 'SELECT landlord_id FROM Landlords WHERE account_id=:account_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->landlord_id = $row['landlord_id'];
+        return true;
+    }
+}
 ?>

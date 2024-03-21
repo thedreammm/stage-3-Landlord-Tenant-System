@@ -13,6 +13,19 @@ function postFile(filename, destination, post_vars){
     Request.send(post_vars);
 }
 
+function postJsonToFile(filename, destination, post_JSON){
+    var Request = makeRequest();
+    Request.open("POST", filename);
+    Request.setRequestHeader('Content-Type', 'application/json');
+    Request.onreadystatechange = function(){
+        if(Request.readyState == 4 && Request.status == 200){
+            console.log(Request.responseText);
+            document.getElementById(destination).innerHTML = Request.responseText;
+        }
+    }
+    Request.send(post_JSON);
+}
+
 function makeRequest(){
     var Request = null;
     if(window.XMLHttpRequest){
@@ -30,6 +43,14 @@ function sendForm(element){
     var destination = "response";
     var post_vars = formToPostvars();
     postFile(filename, destination, post_vars);
+}
+
+function sendFormJSON(element){
+    var filename = element.name + ".php";
+    console.log(filename);
+    var destination = "response";
+    var post_JSON = formToJSON();
+    postJsonToFile(filename, destination, post_JSON);
 }
 
 function formToPostvars(){
@@ -50,6 +71,40 @@ function formToPostvars(){
         }
     }
     return post_vars;
+}
+
+function recursiveDigest(theJSON, element){
+    let name = element.getAttribute("name");
+    if(element.classList.contains("form_input")){
+        theJSON[name] = element.value;
+    }
+    else if(element.classList.contains("sub_form")){
+        theJSON[name] = {};
+        for(let i = 0; i < element.children.length; i++){
+            recursiveDigest(theJSON[name], element.children[i]);
+        }
+    }
+    else if(element.classList.contains("form_array")){
+        theJSON[name] = [];
+        let j = 0;
+        for(let i = 0; i < element.children.length; i++){
+            if(element.children[i].classList.contains("form_input")){
+                theJSON[name].push({});
+                recursiveDigest(theJSON[name][j], element.children[i]);
+                j+=1;
+            }
+        }
+    }
+}
+
+function formToJSON(){
+    var formJSON = {};
+    element = document.getElementsByClassName("form")[0];
+
+    for(var i = 0; i < element.children.length; i++){
+        recursiveDigest(formJSON, element.children[i]);
+    }
+    return JSON.stringify(formJSON);
 }
 
 function togglePassword(){
