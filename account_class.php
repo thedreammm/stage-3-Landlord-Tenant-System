@@ -86,7 +86,7 @@ Class Account extends DatabaseEntity{
 
         $this->account_id = $db->lastInsertRowID();
 
-        if($this->account_type == 0){
+        if($this->account_type == "tenant"){
             $sql = 'INSERT INTO Tenants(account_id) VALUES (:account_id)';
         }
         else{
