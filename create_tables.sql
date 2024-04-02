@@ -72,3 +72,16 @@ CREATE TABLE "Costs" (
 	PRIMARY KEY("cost_id"),
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id")
 );
+
+CREATE TABLE "Documents" (
+	"document_id"	INTEGER,
+	"property_id"	INTEGER,
+	"account_id"	INTEGER,
+	"document_type"	TEXT,
+	"name"	TEXT,
+	"mime_type"	TEXT,
+	"upload_date"	TEXT,
+	PRIMARY KEY("document_id"),
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
+);
