@@ -85,3 +85,12 @@ CREATE TABLE "Documents" (
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
 );
+
+CREATE TABLE "Service_providers" (
+	"service_id"	INTEGER,
+	"landlord_id"	INTEGER,
+	"name"	TEXT,
+	"email"	TEXT,
+	PRIMARY KEY("service_id"),
+	FOREIGN KEY("landlord_id") REFERENCES "Landlords"("landlord_id")
+);

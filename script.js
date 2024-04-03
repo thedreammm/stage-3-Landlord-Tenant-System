@@ -95,6 +95,11 @@ function recursiveDigest(theJSON, element){
             }
         }
     }
+    else{   //its like a generic div for styling or whatevs
+        for(let i = 0; i < element.children.length; i++){
+            recursiveDigest(theJSON, element.children[i]);
+        }
+    }
 }
 
 function formToJSON(){
