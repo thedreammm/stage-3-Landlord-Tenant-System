@@ -62,7 +62,7 @@ Class OnetimeCode extends databaseEntity{
         $stmt->bindParam(':iv', $iv, SQLITE3_TEXT);
         $result = $stmt->execute();
 
-        return true;
+        return $result;
     }
 
     function loadCode(){

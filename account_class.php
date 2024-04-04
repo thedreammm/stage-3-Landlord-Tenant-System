@@ -95,8 +95,9 @@ Class Account extends DatabaseEntity{
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
         $result = $stmt->execute();
-        return true;
+        return $result;
     }
+
 
     function unpack($row){
         if($row){
@@ -165,6 +166,14 @@ Class Tenant extends Account{
     public $tenant_id;
     function __construct($params){
         parent::__construct($params);
+    }
+
+    function tenantCount(){
+        $db = new SQLite3('database.db');
+        $sql = 'SELECT COUNT(*) FROM Tenants';
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute();
+        return $result;
     }
 
     function loadAccount(){

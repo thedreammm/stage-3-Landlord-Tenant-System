@@ -55,7 +55,7 @@ Class Address extends DatabaseEntity{
         $result = $stmt->execute();
 
         $this->address_id = $db->lastInsertRowID();
-        return true;
+        return $result;
     }
 
     function unpack($row){

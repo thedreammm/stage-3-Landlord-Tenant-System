@@ -1,9 +1,11 @@
-<html>
-    <head>
-        <link href="style.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="script.js"></script>
-        <script type="text/javascript" src="property.js"></script>
-    </head>
+<?php include('header.php');
+if(!isset($_SESSION['landlord_id'])){
+    if(isset($_SESSION['tenant_id'])){
+        header('Location: home.php');
+    }else{
+        header("Location: signup.php");
+    }
+}?>
     <body>
         <h1>Add a property</h1>
         <form class="form" name="form">
@@ -44,4 +46,4 @@
         <button name="create_property" onclick="sendFormJSON(this)">Send</button>
         <span id="response"></span>
     </body>
-</html>
+<?php include('footer.php')?>
