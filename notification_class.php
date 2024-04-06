@@ -15,31 +15,33 @@ Class Notification extends DatabaseEntity{
         }
     }
 
-    function LoadNotificationTenant($tenant_id){
+    static function LoadNotificationTenant($tenant_id){
         $db = new SQLite3('database.db');
         $sql = 'SELECT * FROM Notifications WHERE tenant_id = '.$tenant_id;
         $result = $db->query($sql);
-        $row = $result->fetchArray();
+        
         $arrayResult = [];
-
-        while($row){
-            $this->decryptValues($row); 
-            $arrayResult[] = $row;
+        $i = 0;
+        while($row = $result->fetchArray()){
+            $arrayResult[$i] = new Notification(false);
+            $arrayResult[$i]->decryptValues($row); 
+            $i += 1;
         }
         
         return $arrayResult;
     }
 
-    function LoadNotificationLandlord($landlord_id){
+    static function LoadNotificationLandlord($landlord_id){
         $db = new SQLite3('database.db');
         $sql = 'SELECT * FROM Notifications WHERE landlord_id = '.$landlord_id;
         $result = $db->query($sql);
-        $row = $result->fetchArray();
-        $arrayResult = [];
 
-        while($row){
-            $this->decryptValues($row); 
-            $arrayResult[] = $row;
+        $arrayResult = [];
+        $i = 0;
+        while($row = $result->fetchArray()){
+            $arrayResult[$i] = new Notification(false);
+            $arrayResult[$i]->decryptValues($row); 
+            $i += 1;
         }
         
         return $arrayResult;
@@ -66,10 +68,9 @@ Class Notification extends DatabaseEntity{
         $subject = $this->encrypt($this->subject);
         $content = $this->encrypt($this->content);        
         $read = 0;
-
         
-        $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_TEXT);
-        $stmt->bindParam(':tenant_id', $tenant_id, SQLITE3_TEXT);
+        $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_INTEGER);
+        $stmt->bindParam(':tenant_id', $tenant_id, SQLITE3_INTEGER);
         $stmt->bindParam(':subject', $subject, SQLITE3_TEXT);
         $stmt->bindParam(':content', $content, SQLITE3_TEXT);
         $stmt->bindParam(':read', $read, SQLITE3_INTEGER);
@@ -77,7 +78,6 @@ Class Notification extends DatabaseEntity{
         $result = $stmt->execute();
 
         $this->notification_id = $db->lastInsertRowID();
-       
 
         return $result;
     }
@@ -86,7 +86,10 @@ Class Notification extends DatabaseEntity{
 
 
     function unpack($row){
-        if($row){            
+        if($row){
+            if(isset($row['notification_id'])){
+                $this->notification_id = $row['notification_id'];
+            }   
             if(isset($row['landlord_id'])){
                 $this->landlord_id = $row['landlord_id'];
             }
@@ -119,17 +122,18 @@ Class Notification extends DatabaseEntity{
             if(isset($row['tenant_id'])){
                 $this->tenant_id = $row['tenant_id'];
             }
+            if(isset($row['read'])){
+                $this->read = $row['read'];
+            } 
+            if(isset($row['iv'])){
+                $this->iv = $row['iv'];
+            }
+
             if(isset($row['subject'])){
                 $this->subject = $this->decrypt($row['subject']);
             }
             if(isset($row['content'])){
                 $this->content = $this->decrypt($row['content']);
-            }
-            if(isset($row['read'])){
-                $this->read = $row['read'];
-            }            
-            if(isset($row['iv'])){
-                $this->iv = $row['iv'];
             }
         }
     }
