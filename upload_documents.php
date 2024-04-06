@@ -18,7 +18,7 @@ if(isset($_POST["property_id"])){
 }
 if(isset($_POST["submit"])){
     if(isset($_FILES["imageSubmission"])){
-        $image_dirs = uploadDocuments($_POST, $_FILES["imageSubmission"]);
+        $image_dirs = Document::uploadDocuments($_POST, $_FILES["imageSubmission"]);
     }
 }
 

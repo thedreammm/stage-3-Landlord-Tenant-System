@@ -1,6 +1,23 @@
 <?php
 require_once("databaseEntity_class.php");
 
+function loadAccounts($params){
+    $accounts_array = array();
+
+    $db = new SQLite3('database.db');
+    $sql = 'SELECT * FROM Accounts'; //WHERE <params stuff>, maybe
+    $stmt = $db->prepare($sql);
+    $result = $stmt->execute();
+
+    $i = 0;
+    while($row = $result->fetchArray()){
+        $accounts_array[$i] = new Account(false);
+        $accounts_array[$i]->decryptValues($row);
+        $i += 1;
+    }
+    return $accounts_array;
+}
+
 Class Account extends DatabaseEntity{
     public $account_id, $username, $fname, $lname, $email, $password, $account_type, $verified;
     

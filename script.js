@@ -26,6 +26,23 @@ function postJsonToFile(filename, destination, post_JSON){
     Request.send(post_JSON);
 }
 
+function postForJson(filename, destination, post_vars){
+    var Request = makeRequest();
+    console.log(filename);
+    console.log(post_vars);
+    Request.responseType = 'json';
+    Request.open("POST",filename);
+    Request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    Request.onreadystatechange = function(){
+        if(Request.readyState == 4 && Request.status == 200){
+            console.log(Request.response);
+            var newMessage = new MessagingRoom(Request.response);
+            newMessage.displayRoom(destination);
+        }
+    }
+    Request.send(post_vars);
+}
+
 function makeRequest(){
     var Request = null;
     if(window.XMLHttpRequest){
@@ -121,4 +138,39 @@ function togglePassword(){
         passwordElement.type = "password";
     }
     return;
+}
+
+class Message {
+    constructor(json_response){
+        this.message_id = json_response.message_id;
+        this.account_id = json_response.account_id;
+        this.content = json_response.content;
+        this.send_datetime = json_response.send_datetime;
+    }
+
+    loadMessage(div){
+        div.insertAdjacentHTML("beforeend", "<li>[id:  " + this.message_id + "] [sent by: " + this.account_id + "] [sent at: " + this.send_datetime + "] [content: " + this.content + "]</li>");
+        return;
+    }
+}
+
+class MessagingRoom {
+    constructor(json_response){
+        this.room_id = json_response.room_id;
+        this.participants = json_response.participants;
+        this.messages = [];
+        for(var i = 0; i < json_response.messages.length; i++){
+            this.messages.push(new Message(json_response.messages[i]));
+        }
+    }
+
+    displayRoom(destination){
+        var div = document.getElementById(destination);
+        div.innerHTML = "";
+        for(var i = 0; i < this.messages.length; i++){
+            this.messages[i].loadMessage(div);
+        }
+
+        document.getElementById("room_id").value = this.room_id;
+    }
 }

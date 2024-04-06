@@ -1,34 +1,10 @@
 <?php
 require_once("databaseEntity_class.php");
 
-function uploadDocuments($post_vars, $file_array){
-    $response = array();
-    $i = 0;
-    foreach($file_array['tmp_name'] as $tmp_name){
-        $the_file = array(
-            'name' => $file_array['name'][$i],
-            'type' => $file_array['type'][$i],
-            'tmp_name' => $tmp_name,
-            'error' => $file_array['error'][$i],
-            'size' => $file_array['size'][$i],
-        );
-        print_r($the_file);
-        $document_obj = new Document($post_vars);
-        $result = $document_obj->attachFile($the_file);
-        print_r($document_obj);
-        if($result){
-            $document_obj->createDocument();
-        }
-        $response[$i] = "images/" . $document_obj->document_id . ".jpeg";
-        $i += 1;
-    }
-    return $response;
-}
-
 Class Document extends DatabaseEntity{
-    public $document_id, $property_id, $account_id, $document_type, $name, $mime_type, $upload_date;
+    public $document_id, $property_id, $account_id, $document_type, $name, $mime_type, $upload_datetime;
     public $attached_file;
-    public $doc_to_mime = array(
+    public static $doc_to_mime = array(
         'listingimage' => 'image/jpeg',
         'rentalapplication' => 'image/jpeg', //rental application consists of things like proof of identity & income
         'leaseagreement' => 'application/pdf',
@@ -39,6 +15,30 @@ Class Document extends DatabaseEntity{
     function __construct($params){
         parent::__construct("Documents");
         $this->unpack($params);
+    }
+
+    static function uploadDocuments($post_vars, $file_array){
+        $response = array();
+        $i = 0;
+        foreach($file_array['tmp_name'] as $tmp_name){
+            $the_file = array(
+                'name' => $file_array['name'][$i],
+                'type' => $file_array['type'][$i],
+                'tmp_name' => $tmp_name,
+                'error' => $file_array['error'][$i],
+                'size' => $file_array['size'][$i],
+            );
+            print_r($the_file);
+            $document_obj = new Document($post_vars);
+            $result = $document_obj->attachFile($the_file);
+            print_r($document_obj);
+            if($result){
+                $document_obj->createDocument();
+            }
+            $response[$i] = "images/" . $document_obj->document_id . ".jpeg";
+            $i += 1;
+        }
+        return $response;
     }
 
     function validInsert(){
@@ -71,7 +71,7 @@ Class Document extends DatabaseEntity{
             return false;
         }
         $db = new SQLite3('database.db');
-        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_date) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, :upload_date)';
+        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_datetime) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, datetime("now"))';
         $stmt = $db->prepare($sql);
 
         $property_id = $this->property_id;
@@ -79,14 +79,14 @@ Class Document extends DatabaseEntity{
         $document_type = $this->document_type;
         $name = $this->name;
         $mime_type = $this->mime_type;
-        $upload_date = $this->upload_date;
+        $upload_datetime = $this->upload_datetime;
 
         $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
         $stmt->bindParam(':account_id', $account_id, SQLITE3_INTEGER);
         $stmt->bindParam(':document_type', $document_type, SQLITE3_TEXT);
         $stmt->bindParam(':name', $name, SQLITE3_TEXT);
         $stmt->bindParam(':mime_type', $mime_type, SQLITE3_TEXT);
-        $stmt->bindParam(':upload_date', $upload_date, SQLITE3_TEXT);
+        //$stmt->bindParam(':upload_datetime', $upload_datetime, SQLITE3_TEXT);
 
         $result = $stmt->execute();
 
@@ -120,8 +120,8 @@ Class Document extends DatabaseEntity{
             if(isset($row['mime_type'])){
                 $this->mime_type = $row['mime_type'];
             }
-            if(isset($row['upload_date'])){
-                $this->upload_date = $row['upload_date'];
+            if(isset($row['upload_datetime'])){
+                $this->upload_datetime = $row['upload_datetime'];
             }
         }
     }
@@ -149,7 +149,7 @@ Class Document extends DatabaseEntity{
         if(!$this->document_type){
             return false;
         }
-        $valid_type = $this->doc_to_mime[$this->document_type];
+        $valid_type = Document::doc_to_mime[$this->document_type];
         if(!($this->mime_type == $valid_type)){
             return false;
         }

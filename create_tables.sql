@@ -14,15 +14,15 @@ CREATE TABLE "Accounts" (
 CREATE TABLE "Tenants" (
 	"tenant_id"	INTEGER,
 	"account_id"	INTEGER,
-	PRIMARY KEY("tenant_id"),
+	PRIMARY KEY("tenant_id" AUTOINCREMENT),
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
 );
 
 CREATE TABLE "Landlords" (
 	"landlord_id"	INTEGER,
 	"account_id"	INTEGER,
-	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id"),
-	PRIMARY KEY("landlord_id")
+	PRIMARY KEY("landlord_id" AUTOINCREMENT),
+	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
 );
 
 CREATE TABLE "Onetime_codes" (
@@ -30,7 +30,7 @@ CREATE TABLE "Onetime_codes" (
 	"account_id"	TEXT,
 	"code"	TEXT,
 	"iv"	TEXT,
-	PRIMARY KEY("code_id")
+	PRIMARY KEY("code_id" AUTOINCREMENT)
 );
 
 CREATE TABLE "Addresses" (
@@ -39,7 +39,7 @@ CREATE TABLE "Addresses" (
 	"street_address"	TEXT,
 	"county"	TEXT,
 	"door_number"	TEXT,
-	PRIMARY KEY("address_id")
+	PRIMARY KEY("address_id" AUTOINCREMENT)
 );
 
 CREATE TABLE "Properties" (
@@ -53,14 +53,14 @@ CREATE TABLE "Properties" (
 	"verified"	INTEGER DEFAULT 0,
 	"description"	TEXT,
 	"iv"	TEXT,
-	PRIMARY KEY("property_id")
+	PRIMARY KEY("property_id" AUTOINCREMENT)
 );
 
 CREATE TABLE "Amenities" (
 	"amenity_id"	INTEGER,
 	"property_id"	INTEGER,
 	"description"	TEXT,
-	PRIMARY KEY("amenity_id"),
+	PRIMARY KEY("amenity_id" AUTOINCREMENT),
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id")
 );
 
@@ -69,7 +69,7 @@ CREATE TABLE "Costs" (
 	"property_id"	INTEGER,
 	"cost"	INTEGER,
 	"duration"	INTEGER,
-	PRIMARY KEY("cost_id"),
+	PRIMARY KEY("cost_id" AUTOINCREMENT),
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id")
 );
 
@@ -80,8 +80,8 @@ CREATE TABLE "Documents" (
 	"document_type"	TEXT,
 	"name"	TEXT,
 	"mime_type"	TEXT,
-	"upload_date"	TEXT,
-	PRIMARY KEY("document_id"),
+	"upload_datetime"	DATETIME,
+	PRIMARY KEY("document_id" AUTOINCREMENT),
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
 );
@@ -91,6 +91,31 @@ CREATE TABLE "Service_providers" (
 	"landlord_id"	INTEGER,
 	"name"	TEXT,
 	"email"	TEXT,
-	PRIMARY KEY("service_id"),
+	PRIMARY KEY("service_id" AUTOINCREMENT),
 	FOREIGN KEY("landlord_id") REFERENCES "Landlords"("landlord_id")
+);
+
+CREATE TABLE "Message_rooms" (
+	"room_id"	INTEGER,
+	PRIMARY KEY("room_id" AUTOINCREMENT)
+);
+
+CREATE TABLE "Direct_messages" (
+	"message_id"	INTEGER,
+	"room_id"	INTEGER,
+	"account_id"	TEXT,
+	"content"	TEXT,
+	"send_datetime"	DATETIME,
+	"iv"	TEXT,
+	PRIMARY KEY("message_id" AUTOINCREMENT),
+	FOREIGN KEY("room_id")	REFERENCES "Message_rooms"("room_id")
+);
+
+CREATE TABLE "Room_participants" (
+	"room_id"	INTEGER,
+	"account_id"	INTEGER,
+	"join_datetime"	DATETIME,
+	FOREIGN KEY("room_id") REFERENCES "Message_rooms"("room_id"),
+	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id"),
+	PRIMARY KEY("room_id","account_id")
 );
