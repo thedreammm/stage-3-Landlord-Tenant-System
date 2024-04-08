@@ -8,7 +8,7 @@ function postFile(filename, destination, post_vars){
         if(Request.readyState == 4 && Request.status == 200){
             console.log(Request.responseText);
             document.getElementById(destination).innerHTML = Request.responseText;
-            if(filename == "create_account.php" || filename == "login_account.php")
+            if(filename == "../php_imports/create_account.php" || filename == "../php_imports/login_account.php")
             {window.location.href = 'home.php'};            
         }
     }

@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landlord Tenant System</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript" src="property.js"></script>
+    <script type="text/javascript" src="../js_imports/script.js"></script>
+    <script type="text/javascript" src="../js_imports/property.js"></script>
 </head>
 <body>
 

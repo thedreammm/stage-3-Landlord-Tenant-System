@@ -1,6 +1,6 @@
 <?php
-require_once("property_class.php");
-require_once("document_class.php");
+require_once("../php_classes/property_class.php");
+require_once("../php_classes/document_class.php");
 session_start();
 $account_id = "";
 if(isset($_SESSION['account_id'])){
@@ -27,7 +27,7 @@ if(isset($_POST["submit"])){
 <html>
     <head>
         <link href="style.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="script.js"></script>
+        <script type="text/javascript" src="../js_imports/script.js"></script>
     </head>
     <body>
         <form method="post" action="upload_documents.php" enctype="multipart/form-data">
@@ -49,7 +49,7 @@ if(isset($_POST["submit"])){
         <label id="response"><?php echo $response; ?></label>
 
         <?php foreach($image_dirs as $image){
-            echo '<img src="' . $image . '"><br>';
+            echo '<img src="../js_imports/' . $image . '"><br>';
         }?>
     </body>
 

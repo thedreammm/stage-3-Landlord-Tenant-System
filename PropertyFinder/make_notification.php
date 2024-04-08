@@ -1,7 +1,7 @@
-<?php include('header.php');
+<?php include('../php_imports/header.php');
 if(!isset($_SESSION['landlord_id'])){header('Location: home.php');}
 
-$db = new SQLite3('database.db');
+$db = new SQLite3('../storage/database.db');
 $result = $db->query('SELECT property_id FROM Properties');
 $properties = [];
 while ($row = $result->fetchArray(SQLITE3_ASSOC)){
@@ -23,7 +23,7 @@ while ($row = $result->fetchArray(SQLITE3_ASSOC)){
     <label>Subject:</label><input class="form_input" type="text" name="subject"><br>
     <label>Object:</label><input class="form_input" type="text" name="content"><br>
 </form>
-<button name="create_notifications" onclick="sendForm(this)">Send</button>
+<button name="../php_imports/create_notifications" onclick="sendForm(this)">Send</button>
 <span id="response"></span>
 
-<?php include('footer.php')?>
+<?php include('../php_imports/footer.php')?>

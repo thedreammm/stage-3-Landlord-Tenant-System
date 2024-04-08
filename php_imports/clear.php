@@ -2,4 +2,4 @@
 $_SESSION = array();
 session_destroy();
 session_start();
-header('Location: home.php')?>
+header('Location: ../PropertyFinder/home.php')?>

@@ -1,16 +1,15 @@
 <?php
-    require_once("account_class.php");
+    require_once("../php_classes/account_class.php");
     session_start();
     session_destroy();
     session_start();
-
     $account1 = new Account($_POST);
-    $result = $account1->loadAccount();
-
+    $result = $account1->createAccount();
+    
     $ID = $account1->account_id;
     $type = $account1->account_type;
     if($type == "tenant"){
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
 
         $sql = 'SELECT tenant_id, account_id FROM Tenants WHERE account_id = :account_id';
         $stmt = $db->prepare($sql);
@@ -27,7 +26,7 @@
         $_SESSION['account_id'] = $account_id; 
     }
     else if($type == "landlord"){
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
 
         $sql = 'SELECT landlord_id, account_id FROM Landlords WHERE account_id = :account_id';
         $stmt = $db->prepare($sql);
@@ -43,7 +42,5 @@
         $_SESSION['landlord_id'] = $landlord_id;
         $_SESSION['account_id'] = $account_id; 
     }
-
-
-
+    
 ?>

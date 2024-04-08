@@ -47,7 +47,7 @@ Class OnetimeCode extends databaseEntity{
             return false;
         }
 
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Onetime_codes(account_id, code, iv) VALUES(:account_id, :code, :iv)';
         $stmt = $db->prepare($sql);
 
@@ -67,7 +67,7 @@ Class OnetimeCode extends databaseEntity{
 
     function loadCode(){
         if($this->account_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Onetime_codes WHERE account_id=:account_id';
             $stmt = $db->prepare($sql);
 

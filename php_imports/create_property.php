@@ -1,14 +1,14 @@
 <?php
-require_once("account_class.php");
+require_once("../php_classes/account_class.php");
 session_start();
 $account_id = $_SESSION['account_id'];
 $account1 = new Landlord(array('account_id'=>$account_id));
 $result = $account1->loadAccount();
 
-require_once("property_class.php");
-require_once("address_class.php");
-require_once("cost_class.php");
-require_once("amenity_class.php");
+require_once("../php_classes/property_class.php");
+require_once("../php_classes/address_class.php");
+require_once("../php_classes/cost_class.php");
+require_once("../php_classes/amenity_class.php");
 
 $form = json_decode(file_get_contents('php://input'));
 

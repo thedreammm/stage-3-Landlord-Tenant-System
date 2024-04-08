@@ -20,7 +20,7 @@ Class Property extends DatabaseEntity{
 
     function loadProperty(){
         if($this->property_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Properties WHERE property_id=:property_id';
 
             $stmt = $db->prepare($sql);
@@ -35,7 +35,7 @@ Class Property extends DatabaseEntity{
     }
     function loadLandlordsProperty(){
         if($this->landlord_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Properties WHERE landlord_id=:landlord_id';
 
             $stmt = $db->prepare($sql);
@@ -53,7 +53,7 @@ Class Property extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Properties(landlord_id, address_id, square_footage, bedrooms, bathrooms, deposit, verified, description, iv) VALUES(:landlord_id, :address_id, :square_footage, :bedrooms, :bathrooms, :deposit, :verified, :description, :iv)';
 
         $stmt = $db->prepare($sql);

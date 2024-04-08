@@ -1,4 +1,4 @@
-<?php include ('notification_class.php');
+<?php include ('../php_classes/notification_class.php');
  
 $result;
 if(isset($_SESSION['tenant_id'])){

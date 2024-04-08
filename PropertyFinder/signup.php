@@ -1,4 +1,4 @@
-<?php include('header.php')?>
+<?php include('../php_imports/header.php')?>
 
  
     <h1>Sign up</h1>
@@ -16,8 +16,8 @@
             <option value="landlord">A landlord</option>
         </select><br>
     </form>
-    <button name="create_account" onclick="sendForm(this)">Send</button>
+    <button name="../php_imports/create_account" onclick="sendForm(this)">Send</button>
     <span id="response"></span>
 
     
-<?php include('footer.php')?>
+<?php include('../php_imports/footer.php')?>

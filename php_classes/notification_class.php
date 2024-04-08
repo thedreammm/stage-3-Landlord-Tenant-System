@@ -16,7 +16,7 @@ Class Notification extends DatabaseEntity{
     }
 
     static function LoadNotificationTenant($tenant_id){
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'SELECT * FROM Notifications WHERE tenant_id = '.$tenant_id;
         $result = $db->query($sql);
         
@@ -32,7 +32,7 @@ Class Notification extends DatabaseEntity{
     }
 
     static function LoadNotificationLandlord($landlord_id){
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'SELECT * FROM Notifications WHERE landlord_id = '.$landlord_id;
         $result = $db->query($sql);
 
@@ -56,7 +56,7 @@ Class Notification extends DatabaseEntity{
         }         
     
         
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Notifications(landlord_id, tenant_id, subject, content, read, iv) VALUES(:landlord_id, :tenant_id, :subject, :content, :read, :iv)';
 
         $stmt = $db->prepare($sql);

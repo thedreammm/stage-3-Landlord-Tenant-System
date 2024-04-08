@@ -1,5 +1,5 @@
-<?php include ('header.php');
-include('load_notification.php');
+<?php include ('../php_imports/header.php');
+include('../php_imports/load_notification.php');
     
 if(isset($_SESSION['account_id']))
 {
@@ -52,4 +52,4 @@ else
 
 
 
-<?php include('footer.php')?>
+<?php include('../php_imports/footer.php')?>

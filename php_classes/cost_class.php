@@ -20,7 +20,7 @@ Class Cost extends DatabaseEntity{
 
     function loadCost(){
         if($this->cost_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Costs WHERE cost_id=:cost_id';
 
             $stmt = $db->prepare($sql);
@@ -38,7 +38,7 @@ Class Cost extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Costs(property_id, cost, duration) VALUES(:property_id, :cost, :duration)';
 
         $stmt = $db->prepare($sql);
