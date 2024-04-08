@@ -23,6 +23,10 @@
                 <li><a href="login.php">login</a></li>
                 <li><a href="clear.php">Clear Session</a></li>
                 <li><a href="add_property.php">Add Property</a></li>
+                <li><a href="add_service.php">Add Service</a></li>
+                <li><a href="messages.php">Message other users</a></li>
+                <li><a href="view_accounts.php">View accounts</a></li>
+                <li><a href="view_services.php">View added services</a></li>
             </ul>
         </nav>
     </div>

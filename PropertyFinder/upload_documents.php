@@ -1,7 +1,7 @@
 <?php
+include ('../php_imports/header.php');
 require_once("../php_classes/property_class.php");
 require_once("../php_classes/document_class.php");
-session_start();
 $account_id = "";
 if(isset($_SESSION['account_id'])){
     $account_id = $_SESSION['account_id'];
@@ -18,7 +18,7 @@ if(isset($_POST["property_id"])){
 }
 if(isset($_POST["submit"])){
     if(isset($_FILES["imageSubmission"])){
-        $image_dirs = uploadDocuments($_POST, $_FILES["imageSubmission"]);
+        $image_dirs = Document::uploadDocuments($_POST, $_FILES["imageSubmission"]);
     }
 }
 
@@ -54,3 +54,4 @@ if(isset($_POST["submit"])){
     </body>
 
 </html>
+<?php include('../php_imports/footer.php')?>
