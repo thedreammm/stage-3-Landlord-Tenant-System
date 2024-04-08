@@ -37,14 +37,15 @@ else
                     </tr>
                 </thead>
                 
-                <?php if(isset($result)): ?>
-                    <?php foreach ($result as $notification): ?>
+                <?php
+                if(isset($result)):
+                    foreach ($result as $notification): ?>
                         <tr>
-                            <td><?php echo $notification['subject']; ?></td>
-                            <td><?php echo $notification['content']; ?></td>
+                            <td><?php echo $notification->subject; ?></td>
+                            <td><?php echo $notification->content; ?></td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    <?php endforeach;
+                endif; ?>
         </div>
     </main>
 </div>
