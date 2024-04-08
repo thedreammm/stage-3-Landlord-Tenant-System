@@ -30,6 +30,10 @@ Class DatabaseEntity{
     function decryptUnique($value){
         return openssl_decrypt($value, "aes-128-cbc", $this->seed, 0, $this->static_iv);
     }
+
+    function removeIV(){
+        $this->iv = false;
+    }
 }
 
 ?>
