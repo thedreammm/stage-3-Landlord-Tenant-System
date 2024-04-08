@@ -1,7 +1,7 @@
 <?php
+include ('../php_imports/header.php');
 require_once("../php_classes/property_class.php");
 require_once("../php_classes/document_class.php");
-session_start();
 $account_id = "";
 if(isset($_SESSION['account_id'])){
     $account_id = $_SESSION['account_id'];
@@ -54,3 +54,4 @@ if(isset($_POST["submit"])){
     </body>
 
 </html>
+<?php include('../php_imports/footer.php')?>

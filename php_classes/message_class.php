@@ -17,7 +17,7 @@ Class Message extends DatabaseEntity{
     }
     function loadMessage(){
         if($this->message_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Direct_messages WHERE message_id=:message_id';
 
             $stmt = $db->prepare($sql);
@@ -34,7 +34,7 @@ Class Message extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Direct_messages(room_id, account_id, content, send_datetime, iv) VALUES(:room_id, :account_id, :content, datetime("now"), :iv)';
 
         $stmt = $db->prepare($sql);
@@ -114,7 +114,7 @@ Class MessageRoom extends DatabaseEntity{
 
     static function findRooms($account_id){
         if($account_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT room_id FROM Room_participants WHERE account_id=:account_id';
             $stmt = $db->prepare($sql);
             $stmt->bindParam(':account_id', $account_id, SQLITE3_INTEGER);
@@ -131,7 +131,7 @@ Class MessageRoom extends DatabaseEntity{
     }
     function loadMessageRoom($offset, $size, $send_datetime){
         if($this->room_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT account_id FROM Room_participants WHERE room_id=:room_id';
             $stmt = $db->prepare($sql);
             $stmt->bindParam(':room_id', $this->room_id, SQLITE3_INTEGER);
@@ -167,8 +167,8 @@ Class MessageRoom extends DatabaseEntity{
     }
     function createMessageRoom(){
         //insertion is ALWAYS VALID...!!!!
-        $db = new SQLite3('database.db');
-        $sql = 'INSERT INTO Message_rooms() VALUES()';
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'INSERT INTO Message_rooms DEFAULT VALUES';
         $stmt = $db->prepare($sql);
         $result = $stmt->execute();
 
@@ -177,12 +177,12 @@ Class MessageRoom extends DatabaseEntity{
     }
     function addParticipants($new_participants){
         if($this->room_id){
-            $db = new SQLite3('database.db');
-            $sql = 'INSERT INTO Room_participants(room_id, account_id, join_datetime)) VALUES(:room_id, :account_id, datetime("now")) WHERE EXISTS(SELECT account_id FROM Accounts WHERE account_id = :account_id)';
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'INSERT INTO Room_participants(room_id, account_id, join_datetime) VALUES(:room_id, :account_id, datetime("now"))';
             for($i = 0; $i < count($new_participants); $i++){
                 $stmt = $db->prepare($sql);
                 $stmt->bindParam(':room_id', $this->room_id, SQLITE3_INTEGER);
-                $stmt->bindParam(':account_id', $new_participants[$i], SQLITE3_INTEGER);
+                $stmt->bindParam(':account_id', $new_participants[$i]->account_id, SQLITE3_INTEGER);
                 $result = $stmt->execute();
                 if($result){
                     $this->participants[] = $new_participants[$i];

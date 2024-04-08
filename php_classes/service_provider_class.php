@@ -4,7 +4,7 @@ require_once("databaseEntity_class.php");
 function loadServiceProviders($landlord_id){
     $service_providers = array();
 
-    $db = new SQLite3('database.db');
+    $db = new SQLite3('../storage/database.db');
     $sql = 'SELECT * FROM Service_providers WHERE landlord_id=:landlord_id';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_INTEGER);
@@ -37,7 +37,7 @@ Class ServiceProvider extends DatabaseEntity{
 
     function loadService(){
         if($this->service_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Service_providers WHERE service_id=:service_id';
 
             $stmt = $db->prepare($sql);
@@ -55,7 +55,7 @@ Class ServiceProvider extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Service_providers(landlord_id, name, email) VALUES(:landlord_id, :name, :email)';
 
         $stmt = $db->prepare($sql);

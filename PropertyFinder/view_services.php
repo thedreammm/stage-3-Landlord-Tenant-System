@@ -1,16 +1,16 @@
 <?php
-require_once("service_provider_class.php");
-require_once("account_class.php");
-session_start();
-$account_id = $_SESSION['account_id'];
-$account1 = new Landlord(array('account_id'=>$account_id));
-$result = $account1->loadAccount();
-$landlord_id = false;
-$service_providers = array();
-if($result){
-    $landlord_id = $account1->landlord_id;
-    $service_providers = loadServiceProviders($landlord_id);
+include ('../php_imports/header.php');
+require_once("../php_classes/service_provider_class.php");
+require_once("../php_classes/account_class.php");
+if(!isset($_SESSION['landlord_id'])){
+    if(isset($_SESSION['tenant_id'])){
+        header('Location: home.php');
+    }else{
+        header("Location: signup.php");
+    }
 }
+$landlord_id = $_SESSION['landlord_id'];
+$service_providers = loadServiceProviders($landlord_id);
 
 ?>
 <html>
@@ -28,3 +28,4 @@ if($result){
         <?php endfor; ?>
     </body>
 </html>
+<?php include('../php_imports/footer.php')?>

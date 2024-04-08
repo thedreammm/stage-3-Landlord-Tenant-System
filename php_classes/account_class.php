@@ -1,29 +1,38 @@
 <?php
 require_once("databaseEntity_class.php");
 
-function loadAccounts($params){
-    $accounts_array = array();
-
-    $db = new SQLite3('database.db');
-    $sql = 'SELECT * FROM Accounts'; //WHERE <params stuff>, maybe
-    $stmt = $db->prepare($sql);
-    $result = $stmt->execute();
-
-    $i = 0;
-    while($row = $result->fetchArray()){
-        $accounts_array[$i] = new Account(false);
-        $accounts_array[$i]->decryptValues($row);
-        $i += 1;
-    }
-    return $accounts_array;
-}
-
 Class Account extends DatabaseEntity{
     public $account_id, $username, $fname, $lname, $email, $password, $account_type, $verified;
     
     function __construct($params){
         parent::__construct("Accounts");
         $this->unpack($params);
+    }
+
+    static function loadAccounts($params){
+        $accounts_array = array();
+        if(isset($params['usernames'])){
+            $db = new SQLite3('../storage/database.db');
+            for($i = 0; $i < count($params['usernames']); $i++){
+                $accounts_array[$i] = new Account(false);
+                $accounts_array[$i]->username = $params['usernames'][$i];
+                $accounts_array[$i]->loadAccount();
+            }
+        }
+        else{
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Accounts'; //WHERE <params stuff>, maybe
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute();
+        
+            $i = 0;
+            while($row = $result->fetchArray()){
+                $accounts_array[$i] = new Account(false);
+                $accounts_array[$i]->decryptValues($row);
+                $i += 1;
+            }
+        }
+        return $accounts_array;
     }
 
     function loadAccount(){
@@ -41,7 +50,7 @@ Class Account extends DatabaseEntity{
             $this->decryptValues($row);
             return true;
         }
-        else if($this->username && $this->password){
+        else if($this->username){
             $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Accounts WHERE username=:username';
 
@@ -57,8 +66,11 @@ Class Account extends DatabaseEntity{
             if(isset($row['password'])){
                 $result = password_verify($this->password, $row['password']);
             }
-            if($result){
+            if($result){    //username & password gives all its information
                 $this->decryptValues($row);
+            }
+            else{   //only the username gives only the account_id
+                $this->account_id = $row['account_id'];
             }
         }
     }

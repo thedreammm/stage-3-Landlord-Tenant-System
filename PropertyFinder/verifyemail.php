@@ -1,8 +1,8 @@
 <?php
+    include ('../php_imports/header.php');
     require_once("../php_classes/account_class.php");
     require_once("../php_classes/onetime_code_class.php");
 
-    session_start();
     $account_id = $_SESSION['account_id'];
     $params = array("account_id"=>$account_id);
 
@@ -46,3 +46,4 @@
         
     </body>
 </html>
+<?php include('../php_imports/footer.php')?>

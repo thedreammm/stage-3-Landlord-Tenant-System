@@ -1,7 +1,8 @@
-<?php
-require_once("account_class.php");
+<?php 
+include ('../php_imports/header.php');
+require_once("../php_classes/account_class.php");
 $filter = array();
-$accounts_array = loadAccounts($filter);
+$accounts_array = Account::loadAccounts($filter);
 
 ?>
 <html>
@@ -27,3 +28,4 @@ $accounts_array = loadAccounts($filter);
         </table>
     </body>
 </html>
+<?php include('../php_imports/footer.php')?>

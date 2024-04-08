@@ -1,5 +1,5 @@
 <?php
-require_once("message_class.php");
+require_once("../php_classes/message_class.php");
 header("Content-Type: application/json; charset=UTF-8");
 
 $room_id = false;
