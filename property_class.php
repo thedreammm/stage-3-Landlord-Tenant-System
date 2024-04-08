@@ -33,6 +33,21 @@ Class Property extends DatabaseEntity{
             return true;
         }
     }
+    function loadLandlordsProperty(){
+        if($this->landlord_id){
+            $db = new SQLite3('database.db');
+            $sql = 'SELECT * FROM Properties WHERE landlord_id=:landlord_id';
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':landlord', $this->landlord_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+
+            $row = $result->fetchArray();
+            
+            $this->decryptValues($row);
+            return true;
+        }
+    }
 
     function createProperty(){
         if(!$this->validInsert()){
