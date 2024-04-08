@@ -4,7 +4,7 @@ Class DatabaseEntity{
     public $seed, $static_iv, $iv;
 
     function __construct($table_name){
-        $encryption_keys = file_get_contents('keys.json');
+        $encryption_keys = file_get_contents('../storage/keys.json');
         $keys = json_decode($encryption_keys);
         $seed = $keys->$table_name;
         $static_iv = $keys->static_iv;

@@ -29,7 +29,7 @@ Class Account extends DatabaseEntity{
     function loadAccount(){
 
         if($this->account_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Accounts WHERE account_id=:account_id';
 
             $stmt = $db->prepare($sql);
@@ -42,7 +42,7 @@ Class Account extends DatabaseEntity{
             return true;
         }
         else if($this->username && $this->password){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Accounts WHERE username=:username';
 
             $stmt = $db->prepare($sql);
@@ -76,7 +76,7 @@ Class Account extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Accounts(username, fname, lname, email, password, account_type, verified, iv) VALUES(:username, :fname, :lname, :email, :password, :account_type, :verified, :iv)';
 
         $stmt = $db->prepare($sql);
@@ -112,8 +112,9 @@ Class Account extends DatabaseEntity{
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
         $result = $stmt->execute();
-        return true;
+        return $result;
     }
+
 
     function unpack($row){
         if($row){
@@ -184,9 +185,17 @@ Class Tenant extends Account{
         parent::__construct($params);
     }
 
+    function tenantCount(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT COUNT(*) FROM Tenants';
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute();
+        return $result;
+    }
+
     function loadAccount(){
         parent::loadAccount();
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'SELECT tenant_id FROM Tenants WHERE account_id=:account_id';
 
         $stmt = $db->prepare($sql);
@@ -205,7 +214,7 @@ Class Landlord extends Account{
 
     function loadAccount(){
         parent::loadAccount();
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'SELECT landlord_id FROM Landlords WHERE account_id=:account_id';
 
         $stmt = $db->prepare($sql);

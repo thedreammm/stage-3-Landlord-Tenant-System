@@ -8,6 +8,8 @@ function postFile(filename, destination, post_vars){
         if(Request.readyState == 4 && Request.status == 200){
             console.log(Request.responseText);
             document.getElementById(destination).innerHTML = Request.responseText;
+            if(filename == "../php_imports/create_account.php" || filename == "../php_imports/login_account.php")
+            {window.location.href = 'home.php'};            
         }
     }
     Request.send(post_vars);
@@ -21,6 +23,7 @@ function postJsonToFile(filename, destination, post_JSON){
         if(Request.readyState == 4 && Request.status == 200){
             console.log(Request.responseText);
             document.getElementById(destination).innerHTML = Request.responseText;
+            
         }
     }
     Request.send(post_JSON);

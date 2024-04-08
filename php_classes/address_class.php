@@ -20,7 +20,7 @@ Class Address extends DatabaseEntity{
 
     function loadAddress(){
         if($this->address_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Addresses WHERE address_id=:address_id';
 
             $stmt = $db->prepare($sql);
@@ -38,7 +38,7 @@ Class Address extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Addresses(post_code, street_address, county, door_number) VALUES(:post_code, :street_address, :county, :door_number)';
 
         $stmt = $db->prepare($sql);
@@ -55,7 +55,7 @@ Class Address extends DatabaseEntity{
         $result = $stmt->execute();
 
         $this->address_id = $db->lastInsertRowID();
-        return true;
+        return $result;
     }
 
     function unpack($row){

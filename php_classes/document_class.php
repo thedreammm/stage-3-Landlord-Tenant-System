@@ -52,7 +52,7 @@ Class Document extends DatabaseEntity{
 
     function loadDocument(){
         if($this->document_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Documents WHERE document_id=:document_id';
 
             $stmt = $db->prepare($sql);
@@ -70,8 +70,8 @@ Class Document extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
-        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_datetime) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, datetime("now"))';
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_date) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, :upload_date)';
         $stmt = $db->prepare($sql);
 
         $property_id = $this->property_id;

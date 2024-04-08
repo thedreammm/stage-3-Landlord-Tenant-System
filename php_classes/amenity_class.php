@@ -20,7 +20,7 @@ Class Amenity extends DatabaseEntity{
 
     function loadAmenity(){
         if($this->amenity_id){
-            $db = new SQLite3('database.db');
+            $db = new SQLite3('../storage/database.db');
             $sql = 'SELECT * FROM Amenities WHERE amenity_id=:amenity_id';
 
             $stmt = $db->prepare($sql);
@@ -38,7 +38,7 @@ Class Amenity extends DatabaseEntity{
         if(!$this->validInsert()){
             return false;
         }
-        $db = new SQLite3('database.db');
+        $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Amenities(property_id, description) VALUES(:property_id, :description)';
 
         $stmt = $db->prepare($sql);

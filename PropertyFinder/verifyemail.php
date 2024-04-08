@@ -1,6 +1,6 @@
 <?php
-    require_once("account_class.php");
-    require_once("onetime_code_class.php");
+    require_once("../php_classes/account_class.php");
+    require_once("../php_classes/onetime_code_class.php");
 
     session_start();
     $account_id = $_SESSION['account_id'];
@@ -34,7 +34,7 @@
 <html>
     <head>
         <link href="style.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="script.js"></script>
+        <script type="text/javascript" src="../js_imports/script.js"></script>
     </head>
     <body>
         <h1>Enter your verification code</h1>
@@ -42,7 +42,7 @@
         <form class="form" name="form">
             <label>Your code:</label><input class="form_input" type="text" name="verificationcode"><br>
         </form>
-        <button name="verify_email" onclick="sendForm(this)">Send</button>
+        <button name="../php_imports/verify_email" onclick="sendForm(this)">Send</button>
         
     </body>
 </html>

@@ -73,6 +73,27 @@ CREATE TABLE "Costs" (
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id")
 );
 
+
+CREATE TABLE "Notifications" (
+	"notification_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"landlord_id" INTEGER,
+	"tenant_id" INTEGER,
+	"subject" TEXT,
+	"content" TEXT,
+	"read" INTEGER,
+	"iv" TEXT,
+	FOREIGN KEY ("landlord_id") REFERENCES "Landlords" ("landlord_id"),
+	FOREIGN KEY ("tenant_id") REFERENCES "Tenants" ("tenant_id")
+);
+
+CREATE TABLE "Lease_Test" (
+	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"property_id" INTEGER,
+	"tenant_id" INTEGER,
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id")
+);
+
 CREATE TABLE "Documents" (
 	"document_id"	INTEGER,
 	"property_id"	INTEGER,
