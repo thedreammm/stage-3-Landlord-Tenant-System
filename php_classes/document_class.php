@@ -71,7 +71,7 @@ Class Document extends DatabaseEntity{
             return false;
         }
         $db = new SQLite3('../storage/database.db');
-        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_date) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, :upload_date)';
+        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_datetime) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, datetime("now"))';
         $stmt = $db->prepare($sql);
 
         $property_id = $this->property_id;
@@ -79,7 +79,7 @@ Class Document extends DatabaseEntity{
         $document_type = $this->document_type;
         $name = $this->name;
         $mime_type = $this->mime_type;
-        $upload_datetime = $this->upload_datetime;
+        //$upload_datetime = $this->upload_datetime;
 
         $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
         $stmt->bindParam(':account_id', $account_id, SQLITE3_INTEGER);
@@ -95,7 +95,7 @@ Class Document extends DatabaseEntity{
         //    $this->compressImage($this->attached_file);
         //}
         //else{
-        move_uploaded_file($this->attached_file['tmp_name'], "images/" . $this->document_id . ".jpeg");
+        move_uploaded_file($this->attached_file['tmp_name'], "../storage/documents/" . $this->document_id . ".jpeg");
         //}
         return true;
     }
@@ -149,7 +149,7 @@ Class Document extends DatabaseEntity{
         if(!$this->document_type){
             return false;
         }
-        $valid_type = Document::doc_to_mime[$this->document_type];
+        $valid_type = Document::$doc_to_mime[$this->document_type];
         if(!($this->mime_type == $valid_type)){
             return false;
         }

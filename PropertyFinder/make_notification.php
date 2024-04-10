@@ -1,23 +1,20 @@
-<?php include('../php_imports/header.php');
-if(!isset($_SESSION['landlord_id'])){header('Location: home.php');}
-
-$db = new SQLite3('../storage/database.db');
-$result = $db->query('SELECT property_id FROM Properties');
-$properties = [];
-while ($row = $result->fetchArray(SQLITE3_ASSOC)){
-    $properties[] = $row['property_id'];
+<?php 
+include('../php_imports/header.php');
+require_once('../php_classes/property_class.php');
+if(!isset($_SESSION['landlord_id'])){
+    header('Location: home.php');
 }
-///Ideally this is limited to properties this landlord owns
+$properties = Property::loadProperties($_SESSION);
 ?>
 
 <h1>Send notification</h1>
 <form class="form" name="form">
-    <label>Property?</label>
+    <label>Property</label>
     <select class="form_input" name="property_id">
         <option selected hidden disabled>Select one</option>
-        <?php foreach ($properties as $propID){
-            echo "<option value\"$propID\">$propID</option>";
-        }?>
+        <?php foreach ($properties as $property):?>
+            <option value="<?php echo $property->property_id; ?>"><?php echo $property->title; ?></option>";
+        <?php endforeach; ?>
     </select><br>
     
     <label>Subject:</label><input class="form_input" type="text" name="subject"><br>

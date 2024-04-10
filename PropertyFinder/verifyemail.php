@@ -3,10 +3,7 @@
     require_once("../php_classes/account_class.php");
     require_once("../php_classes/onetime_code_class.php");
 
-    $account_id = $_SESSION['account_id'];
-    $params = array("account_id"=>$account_id);
-
-    $account1 = new Account($params);
+    $account1 = new Account($_SESSION);
     $result = $account1->loadAccount();
     if($result){
         $email = $account1->email;
@@ -26,7 +23,7 @@
                 $result = "Email was successfully sent.";
             }
         }
-        $result .= ( ($email) ? " Email used=" . $email : "No email. " ) . ( ($body) ? $body : "No body. ");
+        $result .= ( ($email) ? " The Email used was " . $email : " No Email on record. " );
 
     }
 ?>

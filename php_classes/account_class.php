@@ -127,6 +127,20 @@ Class Account extends DatabaseEntity{
         return $result;
     }
 
+    function updateAccount($params){
+        if(!$this->account_id){
+            return false;
+        }
+        $db = new SQLite3('../storage/database.db');
+        if(isset($params['verified'])){
+            $sql = 'UPDATE Accounts SET verified=:verified WHERE account_id=:account_id';
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':verified', $params['verified'], SQLITE3_INTEGER);
+            $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        }
+        $result = $stmt->execute();
+        return $result;
+    }
 
     function unpack($row){
         if($row){

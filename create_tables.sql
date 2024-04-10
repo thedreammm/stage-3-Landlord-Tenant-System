@@ -46,6 +46,7 @@ CREATE TABLE "Properties" (
 	"property_id"	INTEGER,
 	"landlord_id"	TEXT,
 	"address_id"	TEXT,
+	"title"	TEXT,
 	"square_footage"	INTEGER,
 	"bedrooms"	INTEGER,
 	"bathrooms"	INTEGER,
