@@ -49,7 +49,7 @@ if(isset($_POST["submit"])){
         <label id="response"><?php echo $response; ?></label>
 
         <?php foreach($image_dirs as $image){
-            echo '<img src="../js_imports/' . $image . '"><br>';
+            echo '<img src="' . $image . '"><br>';
         }?>
     </body>
 

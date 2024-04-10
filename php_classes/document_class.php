@@ -35,7 +35,7 @@ Class Document extends DatabaseEntity{
             if($result){
                 $document_obj->createDocument();
             }
-            $response[$i] = "images/" . $document_obj->document_id . ".jpeg";
+            $response[$i] = "../storage/documents/" . $document_obj->document_id . ".jpeg";
             $i += 1;
         }
         return $response;
