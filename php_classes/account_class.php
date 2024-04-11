@@ -132,11 +132,31 @@ Class Account extends DatabaseEntity{
             return false;
         }
         $db = new SQLite3('../storage/database.db');
-        if(isset($params['verified'])){
-            $sql = 'UPDATE Accounts SET verified=:verified WHERE account_id=:account_id';
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':verified', $params['verified'], SQLITE3_INTEGER);
-            $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        if(isset($params['verificationcode'])){
+            require_once("onetime_code_class.php");
+
+            $code = new OnetimeCode(array('account_id'=>$this->account_id));
+            $code->loadCode();
+            if($params['verificationcode'] == $code->code){
+                $this->verified = 1;
+                $sql = 'UPDATE Accounts SET verified=:verified WHERE account_id=:account_id';
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(':verified', $this->verified, SQLITE3_INTEGER);
+                $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+            }
+        }
+        else if(isset($params['resetcode'])){
+            require_once("onetime_code_class.php");
+
+            $code = new OnetimeCode(array('account_id'=>$this->account_id));
+            $result = $code->loadCode();
+            if($params['resetcode'] == $code->code){
+                $password = $this->encryptPassword($params['password']);
+                $sql = 'UPDATE Accounts SET password=:password WHERE account_id=:account_id';
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(':password', $password, SQLITE3_TEXT);
+                $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+            }
         }
         $result = $stmt->execute();
         return $result;

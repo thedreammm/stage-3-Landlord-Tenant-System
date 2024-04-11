@@ -1,0 +1,5 @@
+RewriteEngine On
+
+
+RewriteCond "%{DOCUMENT_ROOT}" "!js_imports/"
+RewriteRule "!PropertyFinder/" "/stage 3/stage-3-Landlord-Tenant-System/PropertyFinder/home.php" [R=302]

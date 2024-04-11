@@ -47,7 +47,7 @@ if(isset($_POST["submit"])){
             <input type="submit" name="submit" value="submit">
         </form>
         <label id="response"><?php echo $response; ?></label>
-
+        <li><a href="view_document.php">View your other documents</a></li>
         <?php foreach($image_dirs as $image){
             echo '<img src="' . $image . '"><br>';
         }?>

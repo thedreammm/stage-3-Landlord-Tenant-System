@@ -12,8 +12,8 @@
         $code->createCode();
 
         $result = "Results: ";
-        $subject = "Verification code";
-        $body = "Your verification code is: " . $code->code;
+        $subject = "Reset password";
+        $body = "The code to reset your password is: " . $code->code;
         $header = false;
 
         if($email && $subject && $body){
@@ -34,10 +34,11 @@
         <script type="text/javascript" src="../js_imports/script.js"></script>
     </head>
     <body>
-        <h1>Enter your verification code</h1>
+        <h1>Reset your password:</h1>
         <span id="response"><?php echo $result; ?></span>
         <form class="form" name="form">
-            <label>Your code:</label><input class="form_input" type="text" name="verificationcode"><br>
+            <label>Your code:</label><input class="form_input" type="text" name="resetcode"><br>
+            <label>Your new password:</label><input class="form_input" type="password" name="password"><br>
         </form>
         <button name="../php_imports/update_account" onclick="sendForm(this)">Send</button>
         

@@ -103,6 +103,7 @@ CREATE TABLE "Documents" (
 	"name"	TEXT,
 	"mime_type"	TEXT,
 	"upload_datetime"	DATETIME,
+	"iv"	TEXT,
 	PRIMARY KEY("document_id" AUTOINCREMENT),
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")

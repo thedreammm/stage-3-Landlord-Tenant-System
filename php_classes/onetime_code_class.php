@@ -81,8 +81,10 @@ Class OnetimeCode extends databaseEntity{
             $row = $result->fetchArray();
             if($row){
                 $this->decryptValues($row);
+                return true;
             }
         }
+        return false;
     }
 
     function deleteOldCodes(){
