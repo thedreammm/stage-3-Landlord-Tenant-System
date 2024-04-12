@@ -2,7 +2,7 @@
 require_once("databaseEntity_class.php");
 
 Class Property extends DatabaseEntity{
-    public $property_id, $landlord_id, $address_id, $square_footage, $bedrooms, $bathrooms, $deposit, $verified, $description;
+    public $property_id, $landlord_id, $address_id, $title, $square_footage, $bedrooms, $bathrooms, $deposit, $verified, $description;
 
     function __construct($params){
         parent::__construct("Properties");
@@ -17,22 +17,20 @@ Class Property extends DatabaseEntity{
             return true;
         }
     }
-    static function loadAllProperties($params){
+
+    static function loadProperties($params){
         $properties_array = array();
-        if(isset($params['property_id'])){
+        if(isset($params['landlord_id'])){
             $db = new SQLite3('../storage/database.db');
-            for($i = 0; $i < count($params['property_id']); $i++){
-                $properties_array[$i] = new Property(false);
-                $properties_array[$i]->property_id = $params['property_id'][$i];
-                $properties_array[$i]->loadProperty();
-            }
-        }
-        else{
-            $db = new SQLite3('../storage/database.db');
-            $sql = 'SELECT * FROM Properties'; //WHERE <params stuff>, maybe
+            $sql = 'SELECT * FROM Properties WHERE landlord_id=:landlord_id';
             $stmt = $db->prepare($sql);
+            
+            $obj = new Property(false);
+            $landlord_id = $obj->encryptUnique($params['landlord_id']);
+
+            $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_TEXT);
             $result = $stmt->execute();
-        
+
             $i = 0;
             while($row = $result->fetchArray()){
                 $properties_array[$i] = new Property(false);
@@ -57,28 +55,13 @@ Class Property extends DatabaseEntity{
             return true;
         }
     }
-    function loadLandlordsProperty(){
-        if($this->landlord_id){
-            $db = new SQLite3('../storage/database.db');
-            $sql = 'SELECT * FROM Properties WHERE landlord_id=:landlord_id';
-
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':landlord', $this->landlord_id, SQLITE3_INTEGER);
-            $result = $stmt->execute();
-
-            $row = $result->fetchArray();
-            
-            $this->decryptValues($row);
-            return true;
-        }
-    }
 
     function createProperty(){
         if(!$this->validInsert()){
             return false;
         }
         $db = new SQLite3('../storage/database.db');
-        $sql = 'INSERT INTO Properties(landlord_id, address_id, square_footage, bedrooms, bathrooms, deposit, verified, description, iv) VALUES(:landlord_id, :address_id, :square_footage, :bedrooms, :bathrooms, :deposit, :verified, :description, :iv)';
+        $sql = 'INSERT INTO Properties(landlord_id, address_id, title, square_footage, bedrooms, bathrooms, deposit, verified, description, iv) VALUES(:landlord_id, :address_id, :title, :square_footage, :bedrooms, :bathrooms, :deposit, :verified, :description, :iv)';
 
         $stmt = $db->prepare($sql);
 
@@ -86,6 +69,7 @@ Class Property extends DatabaseEntity{
         $this->iv = $iv;
         $landlord_id = $this->encryptUnique($this->landlord_id);
         $address_id = $this->encrypt($this->address_id);
+        $title = $this->title;
         $square_footage = $this->square_footage;
         $bedrooms = $this->bedrooms;
         $bathrooms = $this->bathrooms;
@@ -95,6 +79,7 @@ Class Property extends DatabaseEntity{
 
         $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_TEXT);
         $stmt->bindParam(':address_id', $address_id, SQLITE3_TEXT);
+        $stmt->bindParam(':title', $title, SQLITE3_TEXT);
         $stmt->bindParam(':square_footage', $square_footage, SQLITE3_INTEGER);
         $stmt->bindParam(':bedrooms', $bedrooms, SQLITE3_INTEGER);
         $stmt->bindParam(':bathrooms', $bathrooms, SQLITE3_INTEGER);
@@ -118,6 +103,9 @@ Class Property extends DatabaseEntity{
             }
             if(isset($row['address_id'])){
                 $this->address_id = $row['address_id'];
+            }
+            if(isset($row['title'])){
+                $this->title = $row['title'];
             }
             if(isset($row['square_footage'])){
                 $this->square_footage = $row['square_footage'];
@@ -147,6 +135,9 @@ Class Property extends DatabaseEntity{
         if($row){
             if(isset($row['property_id'])){
                 $this->property_id = $row['property_id'];
+            }
+            if(isset($row['title'])){
+                $this->title = $row['title'];
             }
             if(isset($row['square_footage'])){
                 $this->square_footage = $row['square_footage'];

@@ -9,6 +9,7 @@ if(!isset($_SESSION['landlord_id'])){
     <body>
         <h1>Add a property</h1>
         <form class="form" name="form">
+            <label>Listing title:</label><input class="form_input" type="text" name="title"><br>
             <div id="address" class="sub_form" name="address">
                 <h3>Add an address:</h3><br>
                 <label>Post code:</label><input class="form_input" type="text" name="post_code"><br>

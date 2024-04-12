@@ -36,6 +36,8 @@ Class OnetimeCode extends databaseEntity{
     }
 
     function createCode(){
+        $this->deleteOldCodes();
+        
         $chars = array_merge(range('0','9'), range('a','z'), range('A','Z'));
         $code = "";
         for($i = 0; $i < 6; $i++){
@@ -79,8 +81,23 @@ Class OnetimeCode extends databaseEntity{
             $row = $result->fetchArray();
             if($row){
                 $this->decryptValues($row);
+                return true;
             }
         }
+        return false;
+    }
+
+    function deleteOldCodes(){
+        if($this->account_id){
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'DELETE FROM Onetime_codes WHERE account_id=:account_id';
+            $stmt = $db->prepare($sql);
+            $account_id = $this->encryptUnique($this->account_id);
+            $stmt->bindParam(':account_id', $account_id, SQLITE3_TEXT);
+            $result = $stmt->execute();
+            return $result;
+        }
+        return false;
     }
 
     function decryptValues($row){
@@ -88,15 +105,17 @@ Class OnetimeCode extends databaseEntity{
             if(isset($row['code_id'])){
                 $this->code_id = $row['code_id'];
             }
+            if(isset($row['iv'])){
+                $this->iv = $row['iv'];
+            }
+
             if(isset($row['account_id'])){
                 $this->account_id = $this->decryptUnique($row['account_id']);
             }
             if(isset($row['code'])){
                 $this->code = $this->decrypt($row['code']);
             }
-            if(isset($row['iv'])){
-                $this->iv = $row['iv'];
-            }
+            
         }
     }
 }

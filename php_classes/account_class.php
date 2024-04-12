@@ -127,6 +127,62 @@ Class Account extends DatabaseEntity{
         return $result;
     }
 
+    function updateAccount($params){
+        if(!$this->account_id){
+            return false;
+        }
+        $db = new SQLite3('../storage/database.db');
+        if(isset($params['verificationcode'])){
+            require_once("onetime_code_class.php");
+
+            $code = new OnetimeCode(array('account_id'=>$this->account_id));
+            $code->loadCode();
+            if($params['verificationcode'] == $code->code){
+                $this->verified = 1;
+                $sql = 'UPDATE Accounts SET verified=:verified WHERE account_id=:account_id';
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(':verified', $this->verified, SQLITE3_INTEGER);
+                $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+            }
+        }
+        else if(isset($params['resetcode'])){
+            require_once("onetime_code_class.php");
+
+            $code = new OnetimeCode(array('account_id'=>$this->account_id));
+            $result = $code->loadCode();
+            if($params['resetcode'] == $code->code){
+                $password = $this->encryptPassword($params['password']);
+                $sql = 'UPDATE Accounts SET password=:password WHERE account_id=:account_id';
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(':password', $password, SQLITE3_TEXT);
+                $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+            }
+        }
+        else{
+            
+
+            $sql = 'UPDATE Accounts SET username=:username, fname=:fname, lname=:lname, email=:email WHERE account_id=:account_id';
+            $stmt = $db->prepare($sql);
+
+            $username = $this->encryptUnique($params['username']);
+            $fname = $this->encrypt($params['fname']);
+            $lname = $this->encrypt($params['lname']);
+            $email = $this->encrypt($params['email']);
+            $verified = 1;
+            if($params['email'] != $this->email){
+                $verified = 0;
+            }
+
+            $stmt->bindParam(':username', $username, SQLITE3_TEXT);
+            $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
+            $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
+            $stmt->bindParam(':email', $email, SQLITE3_TEXT);
+            $stmt->bindParam(':verified', $verified, SQLITE3_INTEGER);
+            $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        }
+        $result = $stmt->execute();
+        return $result;
+    }
 
     function unpack($row){
         if($row){

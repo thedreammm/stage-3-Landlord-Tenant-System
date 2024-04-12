@@ -1,5 +1,8 @@
 <?php
 include ('../php_imports/header.php');
+if(!isset($_SESSION['account_id'])){
+    header("Location: signup.php");
+}
 $account_id = $_SESSION['account_id'];
 
 ?>
