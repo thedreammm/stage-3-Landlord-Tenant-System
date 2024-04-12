@@ -17,7 +17,31 @@ Class Property extends DatabaseEntity{
             return true;
         }
     }
-
+    static function loadAllProperties($params){
+        $properties_array = array();
+        if(isset($params['property_id'])){
+            $db = new SQLite3('../storage/database.db');
+            for($i = 0; $i < count($params['property_id']); $i++){
+                $properties_array[$i] = new Property(false);
+                $properties_array[$i]->property_id = $params['property_id'][$i];
+                $properties_array[$i]->loadProperty();
+            }
+        }
+        else{
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Properties'; //WHERE <params stuff>, maybe
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute();
+        
+            $i = 0;
+            while($row = $result->fetchArray()){
+                $properties_array[$i] = new Property(false);
+                $properties_array[$i]->decryptValues($row);
+                $i += 1;
+            }
+        }
+        return $properties_array;
+    }
     function loadProperty(){
         if($this->property_id){
             $db = new SQLite3('../storage/database.db');
