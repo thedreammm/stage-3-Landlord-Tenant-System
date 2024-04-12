@@ -18,6 +18,7 @@
         </a>
         <nav>
             <ul>
+                <li><a href="profile.php">profile</a></li>
                 <li><a href="signup.php">signup</a></li>
                 <li><a href="home.php">home</a></li>
                 <li><a href="login.php">login</a></li>

@@ -28,10 +28,8 @@ Class Document extends DatabaseEntity{
                 'error' => $file_array['error'][$i],
                 'size' => $file_array['size'][$i],
             );
-            print_r($the_file);
             $document_obj = new Document($post_vars);
             $result = $document_obj->attachFile($the_file);
-            print_r($document_obj);
             if($result){
                 $document_obj->createDocument();
             }

@@ -158,6 +158,28 @@ Class Account extends DatabaseEntity{
                 $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
             }
         }
+        else{
+            
+
+            $sql = 'UPDATE Accounts SET username=:username, fname=:fname, lname=:lname, email=:email WHERE account_id=:account_id';
+            $stmt = $db->prepare($sql);
+
+            $username = $this->encryptUnique($params['username']);
+            $fname = $this->encrypt($params['fname']);
+            $lname = $this->encrypt($params['lname']);
+            $email = $this->encrypt($params['email']);
+            $verified = 1;
+            if($params['email'] != $this->email){
+                $verified = 0;
+            }
+
+            $stmt->bindParam(':username', $username, SQLITE3_TEXT);
+            $stmt->bindParam(':fname', $fname, SQLITE3_TEXT);
+            $stmt->bindParam(':lname', $lname, SQLITE3_TEXT);
+            $stmt->bindParam(':email', $email, SQLITE3_TEXT);
+            $stmt->bindParam(':verified', $verified, SQLITE3_INTEGER);
+            $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        }
         $result = $stmt->execute();
         return $result;
     }
