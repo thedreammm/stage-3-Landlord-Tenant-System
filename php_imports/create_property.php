@@ -28,6 +28,7 @@ $address_obj->createAddress();
 $post_property = array(
     'landlord_id'=>$account1->landlord_id,
     'address_id'=>$address_obj->address_id,
+    'title'=>$address_obj->title,
     'square_footage'=>$form->square_footage,
     'bedrooms'=>$form->bedrooms,
     'bathrooms'=>$form->bathrooms,

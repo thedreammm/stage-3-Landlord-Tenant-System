@@ -18,6 +18,7 @@
         </a>
         <nav>
             <ul>
+                <li><a href="profile.php">profile</a></li>
                 <li><a href="signup.php">signup</a></li>
                 <li><a href="home.php">home</a></li>
                 <li><a href="login.php">login</a></li>
@@ -27,6 +28,9 @@
                 <li><a href="messages.php">Message other users</a></li>
                 <li><a href="view_accounts.php">View accounts</a></li>
                 <li><a href="view_services.php">View added services</a></li>
+                <li><a href="verifyemail.php">Verify your email</a></li>
+                <li><a href="resetpassword.php">Reset your password</a></li>
+                <li><a href="upload_documents.php">Upload documents</a></li>
             </ul>
         </nav>
     </div>

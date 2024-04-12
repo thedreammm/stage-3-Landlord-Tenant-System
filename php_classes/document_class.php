@@ -28,14 +28,12 @@ Class Document extends DatabaseEntity{
                 'error' => $file_array['error'][$i],
                 'size' => $file_array['size'][$i],
             );
-            print_r($the_file);
             $document_obj = new Document($post_vars);
             $result = $document_obj->attachFile($the_file);
-            print_r($document_obj);
             if($result){
                 $document_obj->createDocument();
             }
-            $response[$i] = "images/" . $document_obj->document_id . ".jpeg";
+            $response[$i] = "../storage/documents/" . $document_obj->document_id . ".jpeg";
             $i += 1;
         }
         return $response;
@@ -71,21 +69,24 @@ Class Document extends DatabaseEntity{
             return false;
         }
         $db = new SQLite3('../storage/database.db');
-        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_date) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, :upload_date)';
+        $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_datetime, iv) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, datetime("now"), :iv)';
         $stmt = $db->prepare($sql);
 
+        $iv = openssl_random_pseudo_bytes(16);
+        $this->iv = $iv;
         $property_id = $this->property_id;
         $account_id = $this->account_id;
         $document_type = $this->document_type;
         $name = $this->name;
         $mime_type = $this->mime_type;
-        $upload_datetime = $this->upload_datetime;
+        //$upload_datetime = $this->upload_datetime;
 
         $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
         $stmt->bindParam(':account_id', $account_id, SQLITE3_INTEGER);
         $stmt->bindParam(':document_type', $document_type, SQLITE3_TEXT);
         $stmt->bindParam(':name', $name, SQLITE3_TEXT);
         $stmt->bindParam(':mime_type', $mime_type, SQLITE3_TEXT);
+        $stmt->bindParam(':iv', $iv, SQLITE3_TEXT);
         //$stmt->bindParam(':upload_datetime', $upload_datetime, SQLITE3_TEXT);
 
         $result = $stmt->execute();
@@ -95,7 +96,9 @@ Class Document extends DatabaseEntity{
         //    $this->compressImage($this->attached_file);
         //}
         //else{
-        move_uploaded_file($this->attached_file['tmp_name'], "images/" . $this->document_id . ".jpeg");
+        
+        $this->encryptFile();
+        move_uploaded_file($this->attached_file['tmp_name'], "../storage/documents/" . $this->document_id . ".jpeg");
         //}
         return true;
     }
@@ -123,6 +126,9 @@ Class Document extends DatabaseEntity{
             if(isset($row['upload_datetime'])){
                 $this->upload_datetime = $row['upload_datetime'];
             }
+            if(isset($row['iv'])){
+                $this->iv = $row['iv'];
+            }
         }
     }
 
@@ -149,7 +155,7 @@ Class Document extends DatabaseEntity{
         if(!$this->document_type){
             return false;
         }
-        $valid_type = Document::doc_to_mime[$this->document_type];
+        $valid_type = Document::$doc_to_mime[$this->document_type];
         if(!($this->mime_type == $valid_type)){
             return false;
         }
@@ -167,4 +173,32 @@ Class Document extends DatabaseEntity{
         //imagedestroy($the_jpeg);
     //    return $result;
     //}
+
+    function encryptFile(){
+        $file = fopen($this->attached_file['tmp_name'], "r");
+        $file_text = base64_encode(fread($file,$this->attached_file['size']));
+        fclose($file);
+        $encrypted_file = $this->encrypt($file_text);
+
+        $file = fopen($this->attached_file['tmp_name'], "w");
+        fwrite($file, $encrypted_file);
+        fclose($file);
+        return true;
+    }
+
+    function getDecryptedFile(){
+        $file_dir = "../storage/documents/" . $this->document_id . ".jpeg";
+        $file = fopen($file_dir, "r");
+        $decrypted_file = $this->decrypt(fread($file, filesize($file_dir)));
+        fclose($file);
+        return $decrypted_file;
+    }
+
+    function displayDocument(){
+        $file = $this->getDecryptedFile();
+
+        $file_dir = '../storage/documents/' . $this->document_id . '.jpeg';
+        $src = 'data: ' . 'image.jpeg' . ';base64,' . $file;
+        return '<img src="'.$src.'">';
+    }
 }
