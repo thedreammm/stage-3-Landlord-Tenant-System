@@ -17,7 +17,7 @@ Class Document extends DatabaseEntity{
         $this->unpack($params);
     }
 
-    static function uploadDocuments($post_vars, $file_array){
+    static function uploadDocuments($params, $file_array){
         $response = array();
         $i = 0;
         foreach($file_array['tmp_name'] as $tmp_name){
@@ -28,7 +28,7 @@ Class Document extends DatabaseEntity{
                 'error' => $file_array['error'][$i],
                 'size' => $file_array['size'][$i],
             );
-            $document_obj = new Document($post_vars);
+            $document_obj = new Document($params);
             $result = $document_obj->attachFile($the_file);
             if($result){
                 $document_obj->createDocument();
@@ -37,6 +37,25 @@ Class Document extends DatabaseEntity{
             $i += 1;
         }
         return $response;
+    }
+
+    static function loadDocuments($property_id, $document_type){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Documents WHERE property_id=:property_id AND document_type=:document_type';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
+        $stmt->bindParam(':document_type', $document_type, SQLITE3_TEXT);
+        $result = $stmt->execute();
+
+        $i = 0;
+        $document_array = array();
+        while($row = $result->fetchArray()){
+            $document_array[$i] = new Document(false);
+            $document_array[$i]->unpack($row);
+            $i+=1;
+        }
+        return $document_array;
     }
 
     function validInsert(){
