@@ -1,7 +1,11 @@
 <?php include('../php_imports/header.php');
 include('../php_imports/load_lease.php');
+require_once('../php_classes/property_class.php');
 
 if(!isset($_SESSION['tenant_id'])){header('Location: home.php');}
+
+$properties = [];
+$properties = Property::loadPropID();
 
 
 ?>
@@ -11,8 +15,8 @@ if(!isset($_SESSION['tenant_id'])){header('Location: home.php');}
     <label>Property?</label>
     <select class="form_input" name="property_id">
         <option selected hidden disabled>Select one</option>
-        <?php foreach ($result as $propID){
-            echo "<option value\"$propID->property_id\">$propID->property_id</option>";
+        <?php foreach ($properties as $propID){
+            echo "<option value\"$propID\">$propID</option>";
         }?>
     </select><br>
     

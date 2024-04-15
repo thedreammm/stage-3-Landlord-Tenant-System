@@ -87,14 +87,6 @@ CREATE TABLE "Notifications" (
 	FOREIGN KEY ("tenant_id") REFERENCES "Tenants" ("tenant_id")
 );
 
-CREATE TABLE "Lease_Test" (
-	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,
-	"property_id" INTEGER,
-	"tenant_id" INTEGER,
-	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
-	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id")
-);
-
 CREATE TABLE "Documents" (
 	"document_id"	INTEGER,
 	"property_id"	INTEGER,
@@ -156,3 +148,15 @@ CREATE TABLE "Maintenance_Requests"(
 	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id"),
 	FOREIGN KEY ("service_id") REFERENCES "Service_providers"("service_id")
 	);
+	
+	CREATE TABLE "Lease_Test" (
+	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"property_id" INTEGER,
+	"tenant_id" INTEGER,
+	"document_id" INTEGER,
+	"date_made" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"accpeted" INTEGER DEFAULT 0,
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id"),
+	FOREIGN KEY("document_id") REFERENCES "Documents"("document_id")
+);

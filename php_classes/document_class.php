@@ -48,6 +48,29 @@ Class Document extends DatabaseEntity{
         }
     }
 
+    static function loadAllDocs(){
+        $docs_array = [];
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Documents';
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute();
+            
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+            $docs_array[] = $row;
+        }
+        return $docs_array;
+
+    }
+
+    static function lastDocID(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT MAX (document_id) AS max_id FROM Documents';
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_ASSOC);
+        return $row['max_id'];
+    }
+
     function loadDocument(){
         if($this->document_id){
             $db = new SQLite3('../storage/database.db');
@@ -61,7 +84,38 @@ Class Document extends DatabaseEntity{
             
             $this->unpack($row);
             return true;
+        } if($this->property_id){
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Documents WHERE property_id=:property_id';
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':property_id', $this->property_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+
+            $row = $result->fetchArray();
+            
+            $this->unpack($row);
+            return true;
         }
+    }
+
+    static function findDocumentID($params){
+        $db = new SQLite3('../storage/database.db');
+        $accID = null;
+        if(isset($params['tenant_id'])){
+            $sql = 'SELECT account_id FROM Tenants WHERE tenant_id='.$params['tenant_id'];
+            $stmt = $db->prepare($sql);
+            $accID = $stmt->execute();
+        }else if(isset($params['landlord_id'])){
+            $sql = 'SELECT account_id FROM Landlords WHERE landlord_id='.$params['landlord_id'];
+            $stmt = $db->prepare($sql);
+            $accID = $stmt->execute();
+        }
+        $sql = 'SELECT document_id FROM Documents WHERE account_id='.$accID;
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute();
+
+        return $result;
     }
 
     function createDocument(){
@@ -194,11 +248,23 @@ Class Document extends DatabaseEntity{
         return $decrypted_file;
     }
 
-    function displayDocument(){
+    function displayDocument($params = null){
+        if($params!==null){
+            $this->unpack($params);
+        }
         $file = $this->getDecryptedFile();
 
         $file_dir = '../storage/documents/' . $this->document_id . '.jpeg';
         $src = 'data: ' . 'image.jpeg' . ';base64,' . $file;
         return '<img src="'.$src.'">';
     }
+
+    /*function displayDocument($params){
+        $this->unpack($params);
+        $file = $this->getDecryptedFile();
+
+        $file_dir = '../storage/documents/' . $this->document_id . '.jpeg';
+        $src = 'data: ' . 'image.jpeg' . ';base64,' . $file;
+        return '<img src="'.$src.'">';
+    }*/
 }
