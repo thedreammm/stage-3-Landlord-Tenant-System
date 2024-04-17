@@ -15,7 +15,29 @@ Class Notification extends DatabaseEntity{
         }
     }
 
-    static function LoadNotificationTenant($tenant_id){
+    static function LoadNotifications($params){
+        $db = new SQLite3('../storage/database.db');
+        $result = null;
+        $arrayResult = [];
+        $i = 0;
+        if(isset($params['tenant_id'])){
+            $sql = 'SELECT * FROM Notifications WHERE tenant_id = '.$params['tenant_id'];
+            $result = $db->query($sql);
+        } else if(isset($params['landlord_id'])){
+            $sql = 'SELECT * FROM Notifications WHERE landlord_id = '.$params['landlord_id'];
+            $result = $db->query($sql);
+        }
+        
+        while($row = $result->fetchArray()){
+            $arrayResult[$i] = new Notification(false);
+            $arrayResult[$i]->decryptValues($row); 
+            $i += 1;
+        }
+        
+        return $arrayResult;
+    }
+    
+    /*static function LoadNotificationTenant($tenant_id){
         $db = new SQLite3('../storage/database.db');
         $sql = 'SELECT * FROM Notifications WHERE tenant_id = '.$tenant_id;
         $result = $db->query($sql);
@@ -45,7 +67,7 @@ Class Notification extends DatabaseEntity{
         }
         
         return $arrayResult;
-    }
+    }*/
 
 
 

@@ -87,14 +87,6 @@ CREATE TABLE "Notifications" (
 	FOREIGN KEY ("tenant_id") REFERENCES "Tenants" ("tenant_id")
 );
 
-CREATE TABLE "Lease_Test" (
-	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,
-	"property_id" INTEGER,
-	"tenant_id" INTEGER,
-	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
-	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id")
-);
-
 CREATE TABLE "Documents" (
 	"document_id"	INTEGER,
 	"property_id"	INTEGER,
@@ -141,4 +133,41 @@ CREATE TABLE "Room_participants" (
 	FOREIGN KEY("room_id") REFERENCES "Message_rooms"("room_id"),
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id"),
 	PRIMARY KEY("room_id","account_id")
+);
+CREATE TABLE "Maintenance_Requests"(
+	"maintenance_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"property_id" INTEGER,
+	"tenant_id" INTEGER,
+	"service_id" INTEGER,
+	"issue" TEXT,
+	"cost" REAL,
+	"date_made" DATETIME,
+	"date_completed" DATETIME NULL,
+	"iv" TEXT,
+	FOREIGN KEY ("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id"),
+	FOREIGN KEY ("service_id") REFERENCES "Service_providers"("service_id")
+	);
+	
+	CREATE TABLE "Leases" (
+	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"property_id" INTEGER,
+	"tenant_id" INTEGER,
+	"document_id" INTEGER,
+	"date_made" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"status" TEXT DEFAULT 'Pending',
+	"iv" TEXT,
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id"),
+	FOREIGN KEY("document_id") REFERENCES "Documents"("document_id")
+);
+
+CREATE TABLE "Occupancies" (
+	"occupancy_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"lease_id" INTEGER,
+	"date_made" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"beginning" DATE,
+	"ending" DATE,
+	"iv" TEXT,
+	FOREIGN KEY ("lease_id") REFERENCES "Leases"("lease_id")
 );

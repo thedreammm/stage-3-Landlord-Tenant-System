@@ -72,7 +72,7 @@ Class Message extends DatabaseEntity{
                 $this->content = $row['content'];
             }
             if(isset($row['send_datetime'])){
-                $this->send_datetim = $row['send_datetim'];
+                $this->send_datetime = $row['send_datetim'];
             }
             if(isset($row['iv'])){
                 $this->iv = $row['iv'];

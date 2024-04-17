@@ -6,6 +6,9 @@ if(isset($_SESSION['account_id']))
     if(isset($_SESSION['tenant_id'])){
         echo '<h1> Success! Account ID: '.$_SESSION['account_id'].'.</h1>';
         echo '<h1> Success! Tenant ID: '.$_SESSION['tenant_id'].'.</h1>';
+
+        echo '<a href = lease_application.php><h3>Apply for Lease</h3></a>';
+        echo '<a href = maintenance_request.php><h3>Maintenance Request</h3></a>';
        
     }
     else if(isset($_SESSION['landlord_id'])){
