@@ -32,6 +32,19 @@ Class Cost extends DatabaseEntity{
             $this->unpack($row);
             return true;
         }
+        else if($this->property_id){
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Costs WHERE property_id=:property_id';
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':property_id', $this->property_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+
+            $row = $result->fetchArray();
+            
+            $this->unpack($row);
+            return true;
+        }
     }
 
     function createCost(){
@@ -53,6 +66,24 @@ Class Cost extends DatabaseEntity{
         $result = $stmt->execute();
 
         return true;
+    }
+    
+    function updateCost($params){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Costs SET cost=:cost, duration=:duration WHERE property_id=:property_id';
+
+        $stmt = $db->prepare($sql);
+
+        $cost = $params['cost'];
+        $duration = $params['duration'];
+        $property_id = $params['property_id'];
+        
+        $stmt->bindParam(':cost', $cost, SQLITE3_INTEGER);
+        $stmt->bindParam(':duration', $duration, SQLITE3_INTEGER);
+        $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        return $result;
     }
 
     function unpack($row){

@@ -24,6 +24,7 @@
                 <li><a href="login.php">login</a></li>
                 <li><a href="clear.php">Clear Session</a></li>
                 <li><a href="add_property.php">Add Property</a></li>
+                <li><a href="edit_property.php">Edit Property</a></li>
                 <li><a href="add_service.php">Add Service</a></li>
                 <li><a href="messages.php">Message other users</a></li>
                 <li><a href="view_accounts.php">View accounts</a></li>
@@ -34,6 +35,8 @@
                 <li><a href="verifyemail.php">Verify your email</a></li>
                 <li><a href="resetpassword.php">Reset your password</a></li>
                 <li><a href="upload_documents.php">Upload documents</a></li>
+                <li><a href="view_property.php">View Properties</a></li>
+                <li><a href="view_applications.php">View Applications</a></li>
             </ul>
         </nav>
     </div>

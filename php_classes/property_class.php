@@ -131,6 +131,32 @@ Class Property extends DatabaseEntity{
         return true;
     }
 
+    function updateProperty($params){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Properties SET title=:title, square_footage=:square_footage, bedrooms=:bedrooms, bathrooms=:bathrooms, deposit=:deposit, description=:description WHERE property_id=:property_id';
+
+        $stmt = $db->prepare($sql);
+
+        $title = $params['title'];
+        $square_footage = $params['square_footage'];
+        $bedrooms = $params['bedrooms'];
+        $bathrooms = $params['bathrooms'];
+        $deposit = $params['deposit'];
+        $description = $params['description'];
+        $property_id = $this->property_id;
+
+        $stmt->bindParam(':title', $title, SQLITE3_TEXT);
+        $stmt->bindParam(':square_footage', $square_footage, SQLITE3_INTEGER);
+        $stmt->bindParam(':bedrooms', $bedrooms, SQLITE3_INTEGER);
+        $stmt->bindParam(':bathrooms', $bathrooms, SQLITE3_INTEGER);
+        $stmt->bindParam(':deposit', $deposit, SQLITE3_INTEGER);
+        $stmt->bindParam(':description', $description, SQLITE3_TEXT);
+        $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        return $result;
+    }
+
     function unpack($row){
         if($row){
             if(isset($row['property_id'])){

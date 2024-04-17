@@ -177,3 +177,9 @@ class MessagingRoom {
         document.getElementById("room_id").value = this.room_id;
     }
 }
+
+function makedisplay(id){
+    var element = document.getElementById(id);
+    element.type = "submit";
+    return;
+}
