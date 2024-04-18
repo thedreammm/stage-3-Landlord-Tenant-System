@@ -5,7 +5,7 @@ if(!isset($_GET['lid'])){header('Location: home.php');};
 ?>
 <h1>Manage Lease</h1>
 
-<h2>Property: <?php echo $property1->title; ?></h2>
+<h2>Property <?php echo $property1->property_id.": ".$property1->title; ?></h2>
 
 
 

@@ -134,20 +134,22 @@ CREATE TABLE "Room_participants" (
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id"),
 	PRIMARY KEY("room_id","account_id")
 );
-CREATE TABLE "Maintenance_Requests"(
-	"maintenance_id" INTEGER PRIMARY KEY AUTOINCREMENT,
-	"property_id" INTEGER,
-	"tenant_id" INTEGER,
-	"service_id" INTEGER,
-	"issue" TEXT,
-	"cost" REAL,
-	"date_made" DATETIME,
-	"date_completed" DATETIME NULL,
-	"iv" TEXT,
-	FOREIGN KEY ("property_id") REFERENCES "Properties"("property_id"),
-	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id"),
-	FOREIGN KEY ("service_id") REFERENCES "Service_providers"("service_id")
-	);
+CREATE TABLE "Maintenance_Requests" (
+	"maintenance_id"	INTEGER,
+	"property_id"	INTEGER,
+	"tenant_id"	INTEGER,
+	"issue"	TEXT,
+	"date_made"	DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"service_id"	INTEGER,
+	"date_service"	DATETIME,
+	"cost"	REAL,
+	"date_completed"	DATETIME,
+	"iv"	TEXT,
+	PRIMARY KEY("maintenance_id" AUTOINCREMENT),
+	FOREIGN KEY("tenant_id") REFERENCES "Tenants"("tenant_id"),
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY("service_id") REFERENCES "Service_providers"("service_id")
+);
 	
 	CREATE TABLE "Leases" (
 	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,

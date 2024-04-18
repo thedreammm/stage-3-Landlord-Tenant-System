@@ -27,8 +27,10 @@
                 <li><a href="add_service.php">Add Service</a></li>
                 <li><a href="messages.php">Message other users</a></li>
                 <li><a href="view_accounts.php">View accounts</a></li>
+                <li><a href="maintenance_request.php">Maintenance Request</a></li>
                 <li><a href="view_all_docs.php">View all documents</a></li>
                 <li><a href="view_leases.php">View leases</a></li>
+                <li><a href="view_m_request.php">View Maintenance Request</a></li>
                 <li><a href="view_properties.php">View properties</a></li>
                 <li><a href="view_services.php">View added services</a></li>
                 <li><a href="verifyemail.php">Verify your email</a></li>
