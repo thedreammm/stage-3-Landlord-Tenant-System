@@ -16,8 +16,8 @@ if(isset($_GET['lid'])){
     $document1->loadDocument();
 
     $tenant1 = new Tenant(false);
-    $tenant1->account_id = $lease1->property_id;
-    $tenant1->loadAccount();
+    $tenant1->tenant_id = $lease1->tenant_id;
+    $tenant1->GetAccountFromTID();
 }
 
 if(isset($_POST['Rejected'])){

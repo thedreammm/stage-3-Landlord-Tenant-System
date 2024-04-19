@@ -18,54 +18,6 @@ Class Occupancy extends DatabaseEntity{
     }
 
 
-    /*function loadLease(){
-        $lease_array = array();
-        $db = new SQLite3('../storage/database.db');        
-        if($this->tenant_id){
-            
-            $sql = 'SELECT * FROM Leases WHERE tenant_id=:tenant_id';
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':tenant_id', $this->tenant_id, SQLITE3_INTEGER);
-            $result = $stmt->execute();
-
-        }
-        else if($this->property_id){
-            $sql = 'SELECT * FROM Leases WHERE property_id=:property_id';
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':property_id', $this->property_id, SQLITE3_INTEGER);
-            $result = $stmt->execute();
-        }
-        else
-        {
-            $sql = 'SELECT * FROM Leases';
-            $stmt = $db->prepare($sql);
-            $result = $stmt->execute();        
-        }
-        $i = 0;
-            while($row=$result->fetchArray()){
-                $lease_array[$i] = new Lease(false);
-                $lease_array[$i]->unpack($row);
-                $i++;
-            }
-        return $lease_array;
-    }
-    static function getTenantLeases($tID){
-        $db = new SQLite3('../storage/database.db');
-        $sql = 'SELECT * FROM Leases WHERE tenant_id='.$tID;
-        $result = $db->query($sql);
-        
-        $arrayResult = [];
-        $i = 0;
-        while($row = $result->fetchArray()){
-            $arrayResult[$i] = new Lease(false);
-            $arrayResult[$i]->unpack($row); 
-            $i += 1;
-        }
-        
-        return $arrayResult;
-    }*/
-
-
     function CreateOccupancy(){
         if(!$this->validInsert()){
             return false;
@@ -82,6 +34,37 @@ Class Occupancy extends DatabaseEntity{
         
         return $result;
     }
+    function loadOccupancy(){
+        $occupancy_array = array();
+        $db = new SQLite3('../storage/database.db');        
+        if($this->occupancy_id){
+            
+            $sql = 'SELECT * FROM Occupancies WHERE occupancy_id=:occupancy_id';
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':occupancy_id', $this->occupancy_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+
+        }
+        else if($this->lease_id){
+            $sql = 'SELECT * FROM Occupancies WHERE lease_id=:lease_id';
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':lease_id', $this->lease_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+        }
+        else
+        {
+            $sql = 'SELECT * FROM Occupancies';
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute();        
+        }
+        $i = 0;
+            while($row=$result->fetchArray()){
+                $occupancy_array[$i] = new Occupancy(false);
+                $occupancy_array[$i]->unpack($row);
+                $i++;
+            }
+        return $occupancy_array;
+    }
 
     static function GetOccupancyByID($LID){
         $db = new SQLite3('../storage/database.db');
@@ -91,6 +74,11 @@ Class Occupancy extends DatabaseEntity{
 
         $stmt->bindParam(':lease_id', $LID, SQLITE3_INTEGER);
         $result = $stmt->execute();
+        
+        while($row = $result->fetchArray()){
+            $result = new Notification(false);
+            $result->unpack($row);            
+        }
 
         return $result;
     }

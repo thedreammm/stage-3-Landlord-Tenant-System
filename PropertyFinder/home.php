@@ -49,6 +49,7 @@ else
                         </tr>
                     <?php endforeach;
                 endif; ?>
+            </table>
         </div>
     </main>
 </div>

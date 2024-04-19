@@ -261,6 +261,19 @@ Class Tenant extends Account{
         return $result;
     }
 
+    function GetAccountFromTID(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT account_id FROM Tenants WHERE tenant_id=:tenant_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':tenant_id', $this->tenant_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->account_id = $row['account_id'];
+        parent::loadAccount();
+        return true;
+    }
+
     function loadAccount(){
         parent::loadAccount();
         $db = new SQLite3('../storage/database.db');
@@ -278,6 +291,19 @@ Class Landlord extends Account{
     public $landlord_id;
     function __construct($params){
         parent::__construct($params);
+    }
+
+    function GetAccountFromLID(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT account_id FROM Landlords WHERE landlord_id=:landlord_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':landlord_id', $this->landlord_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->account_id = $row['account_id'];
+        parent::loadAccount();
+        return true;
     }
 
     function loadAccount(){

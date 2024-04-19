@@ -35,8 +35,13 @@ Class Lease extends DatabaseEntity{
             $stmt->bindParam(':property_id', $this->property_id, SQLITE3_INTEGER);
             $result = $stmt->execute();
         }
-        else
-        {
+        else if($this->lease_id){
+            $sql = 'SELECT * FROM Leases WHERE lease_id=:lease_id';
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':lease_id', $this->lease_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+        } 
+        else{
             $sql = 'SELECT * FROM Leases';
             $stmt = $db->prepare($sql);
             $result = $stmt->execute();        
