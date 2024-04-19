@@ -9,6 +9,56 @@ Class Amenity extends DatabaseEntity{
         $this->unpack($params);
     }
 
+    static function loadAmenities($property_id){
+        if($property_id){
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Amenities WHERE property_id=:property_id';
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+            
+            $amenities_array = array();
+            $i = 0;
+            while($row = $result->fetchArray()){
+                $amenities_array[$i] = new Amenity(false);
+                $amenities_array[$i]->unpack($row);
+                $i += 1;
+            }
+            
+            return $amenities_array;
+        }
+        return false;
+    }
+
+    static function updateAmenities($property_id, $post_amenities){
+        $amenities_array = Amenity::loadAmenities($property_id);
+        $i = 0;
+        while($i < count($amenities_array) && $i < count($post_amenities)){
+            $amenities_array[$i]->updateAmenity( (array) $post_amenities[$i]);
+            $i+=1;
+        }
+        while($i < count($post_amenities)){
+            $post_amenities[$i] = (array) $post_amenities[$i];
+            $post_amenities[$i]['property_id'] = $property_id;
+            $amenity_obj = new Amenity($post_amenities[$i]);
+            $amenity_obj->createAmenity();
+            $i+=1;
+        }
+        if($i < count($amenities_array)){
+            //$amenities_array[$i]->deleteAmenity();
+            //$i+=1;
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'DELETE FROM Amenities WHERE property_id=:property_id OFFSET :excess';
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
+            $stmt->bindParam(':excess', $i, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+        }
+        
+        return true;
+    }
+
     function validInsert(){
         if($this->property_id == null || $this->description == null){
             return false;
@@ -51,6 +101,22 @@ Class Amenity extends DatabaseEntity{
         $result = $stmt->execute();
 
         return true;
+    }
+
+    function updateAmenity($params){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Amenities SET description=:description WHERE amenity_id=:amenity_id';
+
+        $stmt = $db->prepare($sql);
+
+        $description = $params['description'];
+        $amenity_id = $this->amenity_id;
+
+        $stmt->bindParam(':description', $description, SQLITE3_TEXT);
+        $stmt->bindParam(':amenity_id', $amenity_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        return $result;
     }
 
     function unpack($row){
