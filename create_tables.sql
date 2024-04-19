@@ -25,6 +25,13 @@ CREATE TABLE "Landlords" (
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
 );
 
+CREATE TABLE "Admins" (
+	"admin_id"	INTEGER,
+	"account_id"	INTEGER,
+	PRIMARY KEY("admin_id" AUTOINCREMENT),
+	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
+);
+
 CREATE TABLE "Onetime_codes" (
 	"code_id"	INTEGER,
 	"account_id"	TEXT,

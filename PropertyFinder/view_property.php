@@ -2,16 +2,14 @@
 include('../php_imports/header.php');
 require_once('../php_classes/property_class.php');
 require_once('../php_classes/document_class.php');
-if(!isset($_SESSION['tenant_id']) && !isset($_SESSION['landlord_id'])){
-    header("Location: signup.php");
+if(!isset($_GET['pid'])){
+    header("Location: home.php");
 }
 
 $account_id = $_SESSION['account_id'];
-$property_id = false;
-if(isset($_POST['property_id'])){
-    $property_id = $_POST['property_id'];
-    require_once('../php_imports/load_property.php');
-}
+$property_id = $_GET['pid'];
+require_once('../php_imports/load_property.php');
+
 
 $document_array = Document::loadDocuments($property_id, "listingimage");
 $display_array = array();
@@ -19,7 +17,6 @@ for($i = 0; $i < count($document_array); $i++){
     $display_array[$i] = $document_array[$i]->displayDocument();
 }
 
-if($property_id):
 ?>
     <body>
         <h1><?php echo $property1->title; ?></h1>
@@ -66,8 +63,8 @@ if($property_id):
         </form>
     </body>
 <?php 
-endif;
-if(!$property_id):?>
+
+/*if(!$property_id):?>
     <body>
         <h1>Choose a property</h1>
         <form method="post">
@@ -76,6 +73,6 @@ if(!$property_id):?>
         </form>
     </body>
 <?php 
-endif;
+endif;*/
 include('../php_imports/footer.php')
 ?>

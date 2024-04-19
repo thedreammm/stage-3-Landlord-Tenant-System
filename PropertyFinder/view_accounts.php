@@ -5,10 +5,7 @@ $filter = array();
 $accounts_array = Account::loadAccounts($filter);
 
 ?>
-<html>
-    <head>
-        <link href="style.css" rel="stylesheet" type="text/css" />
-    </head>
+
     <body>
         <h1>The website's registered accounts:</h1>
         <table>

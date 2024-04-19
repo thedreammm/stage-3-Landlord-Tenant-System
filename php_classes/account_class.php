@@ -21,7 +21,7 @@ Class Account extends DatabaseEntity{
         }
         else{
             $db = new SQLite3('../storage/database.db');
-            $sql = 'SELECT * FROM Accounts'; //WHERE <params stuff>, maybe
+            $sql = 'SELECT * FROM Accounts'; 
             $stmt = $db->prepare($sql);
             $result = $stmt->execute();
         
@@ -317,6 +317,13 @@ Class Landlord extends Account{
         $row = $result->fetchArray();
         $this->landlord_id = $row['landlord_id'];
         return true;
+    }
+}
+
+Class Admin extends Account{
+    public $admin_id;
+    function __construct($params){
+        parent::__construct($params);
     }
 }
 ?>
