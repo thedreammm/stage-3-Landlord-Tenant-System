@@ -1,4 +1,13 @@
-<?php session_start()?>
+<?php session_start();
+$loggedIn = 0; ///0 not logged in, 1 tenant, 2 landlord, 3 admin(?)
+if(isset($_SESSION['account_id'])){
+    if(isset($_SESSION['tenant_id'])){
+        $loggedIn = 1;
+    }
+    else if(isset($_SESSION['landlord_id'])){
+        $loggedIn = 2;
+    }
+}?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +15,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landlord Tenant System</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <!-- Leaflet API for map doing not finished will have another look--> 
     <script type="text/javascript" src="../js_imports/script.js"></script>
     <script type="text/javascript" src="../js_imports/property.js"></script>
+    
 </head>
 <body>
 
@@ -18,7 +36,7 @@
         </a>
         <nav>
             <ul>
-                <li><a href="profile.php">profile</a></li>
+                <li><a href="index.php">Splash page</a></li>
                 <li><a href="signup.php">signup</a></li>
                 <li><a href="home.php">home</a></li>
                 <li><a href="login.php">login</a></li>
