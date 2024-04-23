@@ -23,7 +23,11 @@ if(isset($_SESSION['tenant_id'])){
     }
     $summaryText = "Landlord ".$_SESSION['landlord_id']."'s Maintenance Request: (Clear session to see all on site)";
 }
-else{
+else if(isset($_SESSION['admin_id'])){
+    $maintenance1 = new Maintenance(false);
+    $request_array = $maintenance1->LoadRequest();
+}
+else {
     $maintenance1 = new Maintenance(false);
     $request_array = $maintenance1->LoadRequest();
 }

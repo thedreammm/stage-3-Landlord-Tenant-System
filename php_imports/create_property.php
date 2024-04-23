@@ -46,6 +46,7 @@ $post_cost = array(
     'property_id'=>$property_id,
     'cost'=>$cost_obj->cost,
     'duration'=>$cost_obj->duration,
+    'period'=>$cost_obj->period,
 );
 
 $cost_obj = new Cost($post_cost);
@@ -61,5 +62,7 @@ for($i = 0; $i < count($amenity_array); $i++){
     $amenity_obj = new Amenity($post_amenity);
     $amenity_obj->createAmenity();
 }
+
+
 
 ?>

@@ -118,9 +118,20 @@ Class Account extends DatabaseEntity{
         if($this->account_type == "tenant"){
             $sql = 'INSERT INTO Tenants(account_id) VALUES (:account_id)';
         }
-        else{
+        else if($this->account_type == "landlord"){
             $sql = 'INSERT INTO Landlords(account_id) VALUES (:account_id)';
         }
+        else if($this->account_type == "admin"){
+            $sql = 'INSERT INTO Admins(account_id) VALUES (:account_id)';
+        } 
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        return $result;
+    }
+    function verifyAccount() {
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Accounts SET verified = 1 WHERE account_id = :account_id';
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
         $result = $stmt->execute();
@@ -324,6 +335,19 @@ Class Admin extends Account{
     public $admin_id;
     function __construct($params){
         parent::__construct($params);
+    }
+
+    function loadAccount(){
+        parent::loadAccount();
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT admin_id FROM Admins WHERE account_id=:account_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->admin_id = $row['admin_id'];
+        return true;
     }
 }
 ?>

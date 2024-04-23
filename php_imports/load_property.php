@@ -26,7 +26,8 @@ $address1 = new Address(false);
 $address1->address_id = $property1->address_id;
 $address1->loadAddress();
 
-$cost1 = new Cost($_POST);
+$cost1 = new Cost(false);
+$cost1->property_id = $property1->property_id;
 $cost1->loadCost();
 
 //saving the amenities

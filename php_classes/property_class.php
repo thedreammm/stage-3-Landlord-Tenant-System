@@ -28,6 +28,64 @@ Class Property extends DatabaseEntity{
         return $propID;
     }
 
+    static function searchPropByAdds($addressIds) {
+    $db = new SQLite3('../storage/database.db');
+    $sql = "SELECT * FROM Properties WHERE verified = 1";
+    if (!empty($addressIds)) {
+        $placeholders = implode(' OR ', array_fill(0, count($addressIds), 'address_id = ?'));
+        $sql .= " AND (" . $placeholders . ")";
+    }
+
+    $stmt = $db->prepare($sql);
+    $obj = new Property(false);
+
+    foreach ($addressIds as $key => $addressId) {
+        $addressInp = $obj->encryptUnique($addressId);
+        $stmt->bindValue($key, $addressInp, SQLITE3_TEXT); 
+    }
+
+    $result = $stmt->execute();
+
+    $properties = [];
+    $i = 0;
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        $property = new Property(false);
+        $property->decryptValues($row);
+        $properties[] = $property->property_id;
+        $i+=1;
+    }
+
+    return $properties;
+}
+
+    static function searchByPID($PID) {
+        $db = new SQLite3('../storage/database.db');   
+        $sql = "SELECT * FROM Properties WHERE verified = 1";
+    
+        if (!empty($PID)) {            
+            $placeholders = implode(' OR ', array_fill(0, count($PID), 'property_id = ?'));    
+            $sql .= " AND (" . $placeholders . ")";
+        }
+    
+        $stmt = $db->prepare($sql);
+    
+        foreach ($PID as $key => $costId) {
+            $stmt->bindValue($key + 1, $costId, SQLITE3_INTEGER); 
+        }    
+    
+        $result = $stmt->execute();
+        $i = 0;
+        $properties = [];
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $properties[$i] = new Property(false);
+            $properties[$i]->decryptValues($row);
+            $i+=1;
+        }
+    
+        return $properties;
+    }
+    
+
     static function loadAllProperties($params){
 
         $properties_array = array();
@@ -41,7 +99,7 @@ Class Property extends DatabaseEntity{
         }
         else{
             $db = new SQLite3('../storage/database.db');
-            $sql = 'SELECT * FROM Properties'; //WHERE <params stuff>, maybe
+            $sql = 'SELECT * FROM Properties WHERE verified=1'; //WHERE <params stuff>, maybe
             $stmt = $db->prepare($sql);
             $result = $stmt->execute();
         
@@ -67,6 +125,14 @@ Class Property extends DatabaseEntity{
 
             $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_TEXT);
             $result = $stmt->execute();
+        } else if(isset($params['property_id'])){
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Properties WHERE property_id=:property_id';
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':property_id', $params['property_id'], SQLITE3_INTEGER);
+            $result = $stmt->execute();
+        }
 
             $i = 0;
             while($row = $result->fetchArray()){
@@ -74,7 +140,7 @@ Class Property extends DatabaseEntity{
                 $properties_array[$i]->decryptValues($row);
                 $i += 1;
             }
-        }
+        
         return $properties_array;
     }
 
@@ -93,64 +159,79 @@ Class Property extends DatabaseEntity{
             return true;
         }
     }
-
     static function searchProperty($input){
         $db = new SQLite3('../storage/database.db');
-        $sql = "SELECT * FROM Properties";
-        $properties_array = [];
-
-        if(!empty($input['search'])){
-            $sql.= " WHERE title LIKE :title"; 
+        $sql = "SELECT * FROM Properties WHERE verified = 1";
+        $result_array = [];
+        $conditions = [];
+    
+        if(isset($input['title'])) {
+            $conditions[] = "title LIKE :title";
         }
-        if (!is_null($input['minPrice'])){
-            $sql.= " AND deposit >= :minDeposit";
+        if (isset($input['minPrice'])){
+            $conditions[] = "deposit >= :minDeposit";
         }
-        if (!is_null($input['maxPrice'])){
-            $sql.= " AND deposit <= :maxDeposit";
+        if (isset($input['maxPrice'])){
+            $conditions[] = "deposit <= :maxDeposit";
         }
-        if (!is_null($input['minBedrooms'])){
-            $sql.= " AND bedrooms >= :minBedrooms";
+        if (isset($input['minBedrooms'])){
+            $conditions[] = "bedrooms >= :minBedrooms";
         }
-        if (!is_null($input['minBathrooms'])){
-            $sql.= " AND bathrooms >= :minBathrooms";
+        if (isset($input['minBathrooms'])){
+            $conditions[] = "bathrooms >= :minBathrooms";
         }
-        if (!is_null($input['minSqft'])){
-            $sql.= " AND square_footage >= :square_footage";
+        if (isset($input['minSqft'])){
+            $conditions[] = "square_footage >= :square_footage";
         }
-
+        if (isset($input['address_id'])){
+            
+            $conditions[] = "address_id = :address_id";
+        }
+    
+        // Construct the WHERE clause if there are conditions
+        if (!empty($conditions)) {
+            $sql .= " AND ".implode(" AND ", $conditions);
+        }
+    
         $stmt = $db->prepare($sql);
-        
-        if(!empty($input['search'])){
-            $stmt->bindParam(':title', $input['search'], SQLITE3_TEXT); 
+        if(isset($input['title'])){
+            $stmt->bindParam(':title', $input['title'], SQLITE3_TEXT); 
         }
-        if (!is_null($input['minPrice'])){
+        if (isset($input['minPrice'])){
             $stmt->bindParam(':minDeposit', $input['minPrice'], SQLITE3_FLOAT);
         }
-        if (!is_null($input['maxPrice'])){
+        if (isset($input['maxPrice'])){
             $stmt->bindParam(':maxDeposit', $input['maxPrice'], SQLITE3_FLOAT);
         }
-        if (!is_null($input['minBedrooms'])){
+        if (isset($input['minBedrooms'])){
             $stmt->bindParam(':minBedrooms', $input['minBedrooms'], SQLITE3_INTEGER);
         }
-        if (!is_null($input['minBathrooms'])){
+        if (isset($input['minBathrooms'])){
             $stmt->bindParam(':minBathrooms', $input['minBathrooms'], SQLITE3_INTEGER);
         }
-        if (!is_null($input['minSqft'])){
+        if (isset($input['minSqft'])){
             $stmt->bindParam(':square_footage', $input['minSqft'], SQLITE3_FLOAT);
         }
-        
-
+        if(isset($input['address_id'])){
+            $obj = new Property(false);;
+            $address = $obj->encryptUnique($input['address_id']);
+            $stmt->bindParam(':address_id', $address, SQLITE3_TEXT);
+        }
+    
         $result = $stmt->execute();
-
+    
         $i = 0;
-        while($row = $result->fetchArray()){
-            $properties_array[$i] = new Property(false);
-            $properties_array[$i]->decryptValues($row);
+        
+        while($row = $result->fetchArray(SQLITE3_ASSOC)){
+            $result_array[$i] = new Property(false);    
+            $result_array[$i]->decryptValues($row);
             $i += 1;
         }
+        return $result_array;
         
-        return $properties_array;
     }
+
+    
 
     function createProperty(){
         if(!$this->validInsert()){
@@ -164,13 +245,13 @@ Class Property extends DatabaseEntity{
         $iv = openssl_random_pseudo_bytes(16);
         $this->iv = $iv;
         $landlord_id = $this->encryptUnique($this->landlord_id);
-        $address_id = $this->encrypt($this->address_id);
+        $address_id = $this->encryptUnique($this->address_id);
         $title = $this->title;
         $square_footage = $this->square_footage;
         $bedrooms = $this->bedrooms;
         $bathrooms = $this->bathrooms;
-        $deposit = $this->deposit;        
-        $verified = 0;
+        $deposit = $this->deposit;
+        if(!isset($this->verified)){$verified = 0;}else{$verified = $this->verified;}      
         $description = $this->description;
 
         $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_TEXT);
@@ -287,7 +368,7 @@ Class Property extends DatabaseEntity{
                 $this->landlord_id = $this->decryptUnique($row['landlord_id']);
             }
             if(isset($row['address_id'])){
-                $this->address_id = $this->decrypt($row['address_id']);
+                $this->address_id = $this->decryptUnique($row['address_id']);
             }
         }
     }

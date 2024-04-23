@@ -25,7 +25,8 @@ for($i = 0; $i < count($properties_array); $i++){
     $cost1->loadCost();
     $cost_array[$i] = [
                         'cost' => $cost1->cost,
-                        'duration' => $cost1->duration];
+                        'duration' => $cost1->duration,
+                        'period' => $cost1->period];
 
     $amenity_array[$i] = Amenity::loadAmenities($properties_array[$i]->property_id);
 

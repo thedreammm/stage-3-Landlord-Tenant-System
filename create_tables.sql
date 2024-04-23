@@ -77,6 +77,7 @@ CREATE TABLE "Costs" (
 	"property_id"	INTEGER,
 	"cost"	INTEGER,
 	"duration"	INTEGER,
+	"period" TEXT,
 	PRIMARY KEY("cost_id" AUTOINCREMENT),
 	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id")
 );
@@ -113,6 +114,7 @@ CREATE TABLE "Service_providers" (
 	"landlord_id"	INTEGER,
 	"name"	TEXT,
 	"email"	TEXT,
+	"phone" TEXT,
 	PRIMARY KEY("service_id" AUTOINCREMENT),
 	FOREIGN KEY("landlord_id") REFERENCES "Landlords"("landlord_id")
 );

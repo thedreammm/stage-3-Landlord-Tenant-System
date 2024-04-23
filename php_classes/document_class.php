@@ -17,6 +17,8 @@ Class Document extends DatabaseEntity{
         parent::__construct("Documents");
         $this->unpack($params);
     }
+    
+    
 
     static function uploadDocuments($params, $file_array){
         $response = array();

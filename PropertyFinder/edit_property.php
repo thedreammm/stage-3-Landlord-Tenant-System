@@ -1,23 +1,22 @@
 <?php 
 include('../php_imports/header.php');
 require_once('../php_classes/property_class.php');
-if(!isset($_SESSION['landlord_id'])){
+if(!isset($_SESSION['landlord_id']) || !isset($_SESSION['admin_id'])){
     if(isset($_SESSION['tenant_id'])){
         header('Location: home.php');
     }else{
         header("Location: signup.php");
     }
 }
-
+$property_id;
 $account_id = $_SESSION['account_id'];
-$property_id = false;
-if(isset($_POST['property_id'])){
-    $property_id = $_POST['property_id'];
-    $_SESSION['edit_property'] = $property_id;
+if(isset($_GET['pid'])){
+    $property_id = $_GET['pid'];
+    $_SESSION['edit_property']= $property_id;
     require_once('../php_imports/load_property.php');
+} else {
+    header('location: home.php');
 }
-
-if($property_id):
 ?>
     <body>
         <h1>Edit property</h1>
@@ -41,12 +40,11 @@ if($property_id):
                 <label>Cost:</label><input class="form_input" type="text" name="cost" value="<?php echo $cost1->cost; ?>">
                 <label> per </label> 
                 <input class="form_input" type="text" name="duration" value="<?php echo $cost1->duration; ?>">
-                <select class="form_input" name="duration_unit"><!--make duration unit important-->
-                    <option selected hidden disabled>Select one</option>
-                    <option value="days">Days</option>
-                    <option value="weeks">Weeks</option>
-                    <option value="months">Months</option>
-                    <option value="years">Years</option>
+                <select class="form_input" name="period">
+                    <option value="days" <?php if($cost1->period === "days") echo "selected"; ?>>Days</option>
+                    <option value="weeks" <?php if($cost1->period === "weeks") echo "selected"; ?>>Weeks</option>
+                    <option value="months" <?php if($cost1->period === "months") echo "selected"; ?>>Months</option>
+                    <option value="years" <?php if($cost1->period === "years") echo "selected"; ?>>Years</option>
                 </select><br>
             </div>
 
@@ -62,17 +60,8 @@ if($property_id):
         <button name="../php_imports/update_property" onclick="sendFormJSON(this)">Send</button>
         <span id="response"></span>
     </body>
+
 <?php 
-endif;
-if(!$property_id):?>
-    <body>
-        <h1>Choose a property</h1>
-        <form method="post">
-            <label>Property id: </label><input type="text" name="property_id"><br>
-            <input type="submit" value="submit">
-        </form>
-    </body>
-<?php 
-endif;
+
 include('../php_imports/footer.php')
 ?>

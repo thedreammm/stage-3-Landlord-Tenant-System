@@ -1,5 +1,5 @@
 <?php include('../php_imports/header.php');
-if(!isset($_SESSION['landlord_id'])){
+if(!isset($_SESSION['landlord_id']) || !isset($_SESSION['admin_id'])){
     if(isset($_SESSION['tenant_id'])){
         header('Location: home.php');
     }else{
@@ -28,7 +28,7 @@ if(!isset($_SESSION['landlord_id'])){
                 <label>Cost:</label><input class="form_input" type="text" name="cost">
                 <label> per </label> 
                 <input class="form_input" type="text" name="duration">
-                <select class="form_input" name="duration_unit">
+                <select class="form_input" name="period">
                     <option selected hidden disabled>Select one</option>
                     <option value="days">Days</option>
                     <option value="weeks">Weeks</option>

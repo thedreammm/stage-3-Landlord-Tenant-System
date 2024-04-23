@@ -36,20 +36,40 @@ Class Address extends DatabaseEntity{
 
     static function searchAddress($input){
         $db = new SQLite3('../storage/database.db');
-        $sql = "SELECT * FROM Addresses WHERE :field LIKE :input";
-        
+        $sql = "SELECT * FROM Addresses";
+        $conditions = [];
+        if(isset($input['street_address'])) {
+            $conditions[] = "street_address LIKE :street_address";
+        }
+        if (isset($input['post_code'])){
+            $conditions[] = "post_code LIKE :post_code";
+        }
+        if (isset($input['county'])){
+            $conditions[] = "county LIKE :county";
+        }
+
+        if (!empty($conditions)) {
+            $sql .= " WHERE ".implode(" AND ", $conditions);
+        }
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':field', $input['searchField'], SQLITE3_TEXT);
-        $stmt->bindParam(':input', $input['search'], SQLITE3_TEXT);
+        if(isset($input['street_address'])) {
+            $stmt->bindParam(':street_address', $input['street_address'], SQLITE3_TEXT);
+        }
+        if (isset($input['post_code'])){
+            $stmt->bindParam(':post_code', $input['post_code'], SQLITE3_TEXT);
+        }
+        if (isset($input['county'])){
+            $stmt->bindParam(':county', $input['county'], SQLITE3_TEXT);
+        }
         $result = $stmt->execute();
 
         $i = 0;
-        while($row = $result->fetchArray()){
-            $search_array[$i] = new Address(false);
-            $search_array[$i]->unpack($row);
-            $i += 1;
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+            $result_array[$i] = new Address(false);
+            $result_array[$i]->unpack($row);            
+            $i+=1;
         }
-        return $search_array;
+        return $result_array;
     }
 
     function createAddress(){
