@@ -35,6 +35,7 @@ if(isset($_POST["submit"])){
             <select name="document_type">
                 <option selected hidden disabled>Select one</option>
                 <option value="listingimage">Listing image</option>
+                <option value="amenityimage">Amenity image</option>
                 <option value="rentalapplication">Rental application</option>
                 <option value="leaseagreement">Lease agreement</option>
                 <option value="titledeed">Title deed</option>

@@ -6,6 +6,7 @@ Class Document extends DatabaseEntity{
     public $attached_file;
     public static $doc_to_mime = array(
         'listingimage' => 'image/jpeg',
+        'amenityimage' => 'image/jpeg',
         'rentalapplication' => 'image/jpeg', //rental application consists of things like proof of identity & income
         'leaseagreement' => 'application/pdf',
         'titledeed' => 'application/pdf',
