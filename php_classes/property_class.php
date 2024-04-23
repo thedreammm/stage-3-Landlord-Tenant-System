@@ -69,8 +69,8 @@ Class Property extends DatabaseEntity{
     
         $stmt = $db->prepare($sql);
     
-        foreach ($PID as $key => $costId) {
-            $stmt->bindValue($key + 1, $costId, SQLITE3_INTEGER); 
+        foreach ($PID as $key => $PID) {
+            $stmt->bindValue($key + 1, $PID, SQLITE3_INTEGER); 
         }    
     
         $result = $stmt->execute();
