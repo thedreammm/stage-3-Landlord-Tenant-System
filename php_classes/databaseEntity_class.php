@@ -33,6 +33,13 @@ Class DatabaseEntity{
 
     function removeIV(){
         $this->iv = false;
+        $this->static_iv = false;
+        $this->seed = false;
+    }
+
+    function createIV(){
+        $iv = substr(base64_encode(openssl_random_pseudo_bytes(16)), 0, 16);
+        return $iv;
     }
 }
 
