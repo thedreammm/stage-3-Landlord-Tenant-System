@@ -72,7 +72,7 @@ Class Message extends DatabaseEntity{
                 $this->content = $row['content'];
             }
             if(isset($row['send_datetime'])){
-                $this->send_datetim = $row['send_datetim'];
+                $this->send_datetime = $row['send_datetim'];
             }
             if(isset($row['iv'])){
                 $this->iv = $row['iv'];
@@ -151,7 +151,7 @@ Class MessageRoom extends DatabaseEntity{
             $stmt = $db->prepare($sql);
             $stmt->bindParam(':room_id', $this->room_id, SQLITE3_INTEGER);
             if($send_datetime){
-                $stmt->bindParam(':send_datetime', $send_datetime, SQLITE3_DATETIME);
+                $stmt->bindParam(':send_datetime', $send_datetime, SQLITE3_TEXT);
             }
             $sql .= ' LIMIT ' . $size . ' OFFSET ' . $offset;
 

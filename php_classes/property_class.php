@@ -18,6 +18,43 @@ Class Property extends DatabaseEntity{
         }
     }
 
+    static function loadPropID(){
+        $db = new SQLite3('../storage/database.db');
+        $result = $db->query('SELECT property_id FROM Properties');
+        $propID = [];
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+            $propID[] = $row['property_id'];
+        }
+        return $propID;
+    }
+
+    static function loadAllProperties($params){
+
+        $properties_array = array();
+        if(isset($params['property_id'])){
+            $db = new SQLite3('../storage/database.db');
+            for($i = 0; $i < count($params['property_id']); $i++){
+                $properties_array[$i] = new Property(false);
+                $properties_array[$i]->property_id = $params['property_id'][$i];
+                $properties_array[$i]->loadProperty();
+            }
+        }
+        else{
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Properties'; //WHERE <params stuff>, maybe
+            $stmt = $db->prepare($sql);
+            $result = $stmt->execute();
+        
+            $i = 0;
+            while($row = $result->fetchArray()){
+                $properties_array[$i] = new Property(false);
+                $properties_array[$i]->decryptValues($row);
+                $i += 1;
+            }
+        }
+        return $properties_array;
+    }
+
     static function loadProperties($params){
         $properties_array = array();
         if(isset($params['landlord_id'])){
@@ -55,6 +92,64 @@ Class Property extends DatabaseEntity{
             $this->decryptValues($row);
             return true;
         }
+    }
+
+    static function searchProperty($input){
+        $db = new SQLite3('../storage/database.db');
+        $sql = "SELECT * FROM Properties";
+        $properties_array = [];
+
+        if(!empty($input['search'])){
+            $sql.= " WHERE title LIKE :title"; 
+        }
+        if (!is_null($input['minPrice'])){
+            $sql.= " AND deposit >= :minDeposit";
+        }
+        if (!is_null($input['maxPrice'])){
+            $sql.= " AND deposit <= :maxDeposit";
+        }
+        if (!is_null($input['minBedrooms'])){
+            $sql.= " AND bedrooms >= :minBedrooms";
+        }
+        if (!is_null($input['minBathrooms'])){
+            $sql.= " AND bathrooms >= :minBathrooms";
+        }
+        if (!is_null($input['minSqft'])){
+            $sql.= " AND square_footage >= :square_footage";
+        }
+
+        $stmt = $db->prepare($sql);
+        
+        if(!empty($input['search'])){
+            $stmt->bindParam(':title', $input['search'], SQLITE3_TEXT); 
+        }
+        if (!is_null($input['minPrice'])){
+            $stmt->bindParam(':minDeposit', $input['minPrice'], SQLITE3_FLOAT);
+        }
+        if (!is_null($input['maxPrice'])){
+            $stmt->bindParam(':maxDeposit', $input['maxPrice'], SQLITE3_FLOAT);
+        }
+        if (!is_null($input['minBedrooms'])){
+            $stmt->bindParam(':minBedrooms', $input['minBedrooms'], SQLITE3_INTEGER);
+        }
+        if (!is_null($input['minBathrooms'])){
+            $stmt->bindParam(':minBathrooms', $input['minBathrooms'], SQLITE3_INTEGER);
+        }
+        if (!is_null($input['minSqft'])){
+            $stmt->bindParam(':square_footage', $input['minSqft'], SQLITE3_FLOAT);
+        }
+        
+
+        $result = $stmt->execute();
+
+        $i = 0;
+        while($row = $result->fetchArray()){
+            $properties_array[$i] = new Property(false);
+            $properties_array[$i]->decryptValues($row);
+            $i += 1;
+        }
+        
+        return $properties_array;
     }
 
     function createProperty(){

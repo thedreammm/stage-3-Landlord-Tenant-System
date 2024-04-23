@@ -21,7 +21,7 @@ Class Account extends DatabaseEntity{
         }
         else{
             $db = new SQLite3('../storage/database.db');
-            $sql = 'SELECT * FROM Accounts'; //WHERE <params stuff>, maybe
+            $sql = 'SELECT * FROM Accounts'; 
             $stmt = $db->prepare($sql);
             $result = $stmt->execute();
         
@@ -261,6 +261,19 @@ Class Tenant extends Account{
         return $result;
     }
 
+    function GetAccountFromTID(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT account_id FROM Tenants WHERE tenant_id=:tenant_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':tenant_id', $this->tenant_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->account_id = $row['account_id'];
+        parent::loadAccount();
+        return true;
+    }
+
     function loadAccount(){
         parent::loadAccount();
         $db = new SQLite3('../storage/database.db');
@@ -280,6 +293,19 @@ Class Landlord extends Account{
         parent::__construct($params);
     }
 
+    function GetAccountFromLID(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT account_id FROM Landlords WHERE landlord_id=:landlord_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':landlord_id', $this->landlord_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->account_id = $row['account_id'];
+        parent::loadAccount();
+        return true;
+    }
+
     function loadAccount(){
         parent::loadAccount();
         $db = new SQLite3('../storage/database.db');
@@ -291,6 +317,13 @@ Class Landlord extends Account{
         $row = $result->fetchArray();
         $this->landlord_id = $row['landlord_id'];
         return true;
+    }
+}
+
+Class Admin extends Account{
+    public $admin_id;
+    function __construct($params){
+        parent::__construct($params);
     }
 }
 ?>

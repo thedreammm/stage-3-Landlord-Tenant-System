@@ -25,6 +25,13 @@ CREATE TABLE "Landlords" (
 	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
 );
 
+CREATE TABLE "Admins" (
+	"admin_id"	INTEGER,
+	"account_id"	INTEGER,
+	PRIMARY KEY("admin_id" AUTOINCREMENT),
+	FOREIGN KEY("account_id") REFERENCES "Accounts"("account_id")
+);
+
 CREATE TABLE "Onetime_codes" (
 	"code_id"	INTEGER,
 	"account_id"	TEXT,
@@ -85,14 +92,6 @@ CREATE TABLE "Notifications" (
 	"iv" TEXT,
 	FOREIGN KEY ("landlord_id") REFERENCES "Landlords" ("landlord_id"),
 	FOREIGN KEY ("tenant_id") REFERENCES "Tenants" ("tenant_id")
-);
-
-CREATE TABLE "Lease_Test" (
-	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,
-	"property_id" INTEGER,
-	"tenant_id" INTEGER,
-	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
-	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id")
 );
 
 CREATE TABLE "Documents" (
@@ -161,3 +160,43 @@ CREATE TABLE "Rent_payments" (
 	PRIMARY KEY("rent_id" AUTOINCREMENT),
 	FOREIGN KEY("reminder_id")	REFERENCES "Reminders"("reminder_id")
 )
+
+CREATE TABLE "Maintenance_Requests" (
+	"maintenance_id"	INTEGER,
+	"property_id"	INTEGER,
+	"tenant_id"	INTEGER,
+	"issue"	TEXT,
+	"date_made"	DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"service_id"	INTEGER,
+	"date_service"	DATETIME,
+	"cost"	REAL,
+	"date_completed"	DATETIME,
+	"iv"	TEXT,
+	PRIMARY KEY("maintenance_id" AUTOINCREMENT),
+	FOREIGN KEY("tenant_id") REFERENCES "Tenants"("tenant_id"),
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY("service_id") REFERENCES "Service_providers"("service_id")
+);
+	
+	CREATE TABLE "Leases" (
+	"lease_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"property_id" INTEGER,
+	"tenant_id" INTEGER,
+	"document_id" INTEGER,
+	"date_made" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"status" TEXT DEFAULT 'Pending',
+	"iv" TEXT,
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY ("tenant_id") REFERENCES "Tenants"("tenant_id"),
+	FOREIGN KEY("document_id") REFERENCES "Documents"("document_id")
+);
+
+CREATE TABLE "Occupancies" (
+	"occupancy_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"lease_id" INTEGER,
+	"date_made" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"beginning" DATE,
+	"ending" DATE,
+	"iv" TEXT,
+	FOREIGN KEY ("lease_id") REFERENCES "Leases"("lease_id")
+);

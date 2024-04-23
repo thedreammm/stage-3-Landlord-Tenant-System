@@ -34,6 +34,24 @@ Class Address extends DatabaseEntity{
         }
     }
 
+    static function searchAddress($input){
+        $db = new SQLite3('../storage/database.db');
+        $sql = "SELECT * FROM Addresses WHERE :field LIKE :input";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':field', $input['searchField'], SQLITE3_TEXT);
+        $stmt->bindParam(':input', $input['search'], SQLITE3_TEXT);
+        $result = $stmt->execute();
+
+        $i = 0;
+        while($row = $result->fetchArray()){
+            $search_array[$i] = new Address(false);
+            $search_array[$i]->unpack($row);
+            $i += 1;
+        }
+        return $search_array;
+    }
+
     function createAddress(){
         if(!$this->validInsert()){
             return false;
