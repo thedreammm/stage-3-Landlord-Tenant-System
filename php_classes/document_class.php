@@ -91,7 +91,7 @@ Class Document extends DatabaseEntity{
         $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_datetime, iv) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, datetime("now"), :iv)';
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;
         $property_id = $this->property_id;
         $account_id = $this->account_id;

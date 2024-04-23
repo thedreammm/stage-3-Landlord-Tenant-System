@@ -34,6 +34,8 @@
                 <li><a href="upload_documents.php">Upload documents</a></li>
                 <li><a href="view_property.php">View Properties</a></li>
                 <li><a href="view_applications.php">View Applications</a></li>
+                <li><a href="add_rentpayment.php">Add Rent payments</a></li>
+                <li><a href="view_rentpayment.php">View Rent payment</a></li>
             </ul>
         </nav>
     </div>
