@@ -1,6 +1,5 @@
 function addAmenity(){
     div = document.getElementById("amenities");
-    div.insertAdjacentHTML('beforeend', '<label>Amenity:</label><input class="form_input" type="text" name="description"><br>');
+    div.insertAdjacentHTML('beforeend', '<input type="text" name="description" required class="form_input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Amenity detail"></input>');
     return;
 }
-
