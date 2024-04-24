@@ -84,7 +84,28 @@ Class Property extends DatabaseEntity{
     
         return $properties;
     }
+    static function loadUnVerProp(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Properties WHERE verified=0';
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute();
+        $i = 0;
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $prop_result[$i] = new Property(false);
+            $prop_result[$i]->decryptValues($row); 
+            $i+= 1;
+        }
+        return $prop_result;
+    }
     
+    function verifyProp(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Properties SET verified=1 WHERE property_id=:property_id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':property_id', $this->property_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        return $result;
+    }
 
     static function loadAllProperties($params){
 
@@ -99,7 +120,7 @@ Class Property extends DatabaseEntity{
         }
         else{
             $db = new SQLite3('../storage/database.db');
-            $sql = 'SELECT * FROM Properties WHERE verified=1'; //WHERE <params stuff>, maybe
+            $sql = 'SELECT * FROM Properties WHERE verified=1';
             $stmt = $db->prepare($sql);
             $result = $stmt->execute();
         

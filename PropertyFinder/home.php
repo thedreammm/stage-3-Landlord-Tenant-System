@@ -20,8 +20,7 @@ if(isset($_SESSION['account_id']))
     }
     else
     {
-        echo '<h1> Success! Account ID: '.$_SESSION['account_id'].'.</h1>';
-        echo '<h1> Success! Admin ID: '.$_SESSION['admin_id'].'.</h1>';
+        Header('Location: admin.php');
     }
     
 } 
