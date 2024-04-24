@@ -2,7 +2,7 @@
 require_once("databaseEntity_class.php");
 
 Class Cost extends DatabaseEntity{
-    public $cost_id, $property_id, $cost, $duration;
+    public $cost_id, $property_id, $cost, $duration, $period;
 
     function __construct($params){
         parent::__construct("Costs");
@@ -16,6 +16,25 @@ Class Cost extends DatabaseEntity{
         else{
             return true;
         }
+    }
+    static function searchCost($input){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT property_id FROM Costs WHERE cost<=:cost AND duration>=:duration AND period=:period';
+        $cost_array = [];
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':cost', $input['cost'], SQLITE3_INTEGER);
+        $stmt->bindParam(':duration', $input['duration'], SQLITE3_INTEGER);
+        $stmt->bindParam(':period', $input['period'], SQLITE3_TEXT);
+        $result = $stmt->execute();
+        
+
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)){
+            $cost_array[] = $row['property_id'];
+        }
+        return $cost_array;
+
+
     }
 
     function loadCost(){
@@ -52,17 +71,19 @@ Class Cost extends DatabaseEntity{
             return false;
         }
         $db = new SQLite3('../storage/database.db');
-        $sql = 'INSERT INTO Costs(property_id, cost, duration) VALUES(:property_id, :cost, :duration)';
+        $sql = 'INSERT INTO Costs(property_id, cost, duration, period) VALUES(:property_id, :cost, :duration, :period)';
 
         $stmt = $db->prepare($sql);
 
         $property_id = $this->property_id;
         $cost = $this->cost;
         $duration = $this->duration;
+        $period = $this->period;
 
         $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
         $stmt->bindParam(':cost', $cost, SQLITE3_INTEGER);
         $stmt->bindParam(':duration', $duration, SQLITE3_INTEGER);
+        $stmt->bindParam(':period', $period, SQLITE3_TEXT);
         $result = $stmt->execute();
 
         return true;
@@ -70,17 +91,19 @@ Class Cost extends DatabaseEntity{
     
     function updateCost($params){
         $db = new SQLite3('../storage/database.db');
-        $sql = 'UPDATE Costs SET cost=:cost, duration=:duration WHERE property_id=:property_id';
+        $sql = 'UPDATE Costs SET cost=:cost, duration=:duration, period=:period WHERE property_id=:property_id';
 
         $stmt = $db->prepare($sql);
 
         $cost = $params['cost'];
         $duration = $params['duration'];
+        $period = $params['period'];
         $property_id = $params['property_id'];
         
         $stmt->bindParam(':cost', $cost, SQLITE3_INTEGER);
         $stmt->bindParam(':duration', $duration, SQLITE3_INTEGER);
         $stmt->bindParam(':property_id', $property_id, SQLITE3_INTEGER);
+        $stmt->bindParam(':period', $period, SQLITE3_TEXT);
         $result = $stmt->execute();
 
         return $result;
@@ -99,6 +122,9 @@ Class Cost extends DatabaseEntity{
             }
             if(isset($row['duration'])){
                 $this->duration = $row['duration'];
+            }
+            if(isset($row['period'])){
+                $this->period = $row['period'];
             }
         }
     }

@@ -6,6 +6,7 @@ Class Document extends DatabaseEntity{
     public $attached_file;
     public static $doc_to_mime = array(
         'listingimage' => 'image/jpeg',
+        'amenityimage' => 'image/jpeg',
         'rentalapplication' => 'image/jpeg', //rental application consists of things like proof of identity & income
         'leaseagreement' => 'application/pdf',
         'titledeed' => 'application/pdf',
@@ -16,6 +17,8 @@ Class Document extends DatabaseEntity{
         parent::__construct("Documents");
         $this->unpack($params);
     }
+    
+    
 
     static function uploadDocuments($params, $file_array){
         $response = array();
@@ -145,7 +148,7 @@ Class Document extends DatabaseEntity{
         $sql = 'INSERT INTO Documents(property_id, account_id, document_type, name, mime_type, upload_datetime, iv) VALUES(:property_id, :account_id, :document_type, :name, :mime_type, datetime("now"), :iv)';
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;
         $property_id = $this->property_id;
         $account_id = $this->account_id;

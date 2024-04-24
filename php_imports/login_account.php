@@ -43,6 +43,23 @@
         $_SESSION['landlord_id'] = $landlord_id;
         $_SESSION['account_id'] = $account_id; 
     }
+    else if($type == "admin"){
+        $db = new SQLite3('../storage/database.db');
+
+        $sql = 'SELECT admin_id, account_id FROM Admins WHERE account_id = :account_id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $ID, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+
+        $row = $result->fetchArray(SQLITE3_ASSOC);
+        $admin_id = $row['admin_id'];
+        $account_id = $row['account_id'];
+            
+
+        $_SESSION['admin_id'] = $admin_id;
+        $_SESSION['account_id'] = $account_id; 
+    }
 
 
 

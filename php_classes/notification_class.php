@@ -1,4 +1,4 @@
-<?php include('databaseEntity_class.php');
+<?php require_once('databaseEntity_class.php');
 
 Class Notification extends DatabaseEntity{
     public $notification_id, $landlord_id, $tenant_id, $subject, $content, $read;
@@ -83,7 +83,7 @@ Class Notification extends DatabaseEntity{
 
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;        
         $landlord_id = $this->landlord_id;
         $tenant_id = $this->tenant_id;

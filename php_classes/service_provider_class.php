@@ -19,7 +19,7 @@ function loadServiceProviders($landlord_id){
 }
 
 Class ServiceProvider extends DatabaseEntity{
-    public $service_id, $landlord_id, $name, $email;
+    public $service_id, $landlord_id, $name, $email, $phone;
 
     function __construct($params){
         parent::__construct("Service_providers");
@@ -27,7 +27,7 @@ Class ServiceProvider extends DatabaseEntity{
     }
 
     function validInsert(){
-        if($this->landlord_id == null || $this->name == null || $this->email == null){
+        if($this->landlord_id == null || $this->name == null || $this->email == null || $this->phone == null){
             return false;
         }
         else{
@@ -56,19 +56,21 @@ Class ServiceProvider extends DatabaseEntity{
             return false;
         }
         $db = new SQLite3('../storage/database.db');
-        $sql = 'INSERT INTO Service_providers(landlord_id, name, email) VALUES(:landlord_id, :name, :email)';
+        $sql = 'INSERT INTO Service_providers(landlord_id, name, email, phone) VALUES(:landlord_id, :name, :email, :phone)';
 
         $stmt = $db->prepare($sql);
 
         $landlord_id = $this->landlord_id;
         $name = $this->name;
         $email = $this->email;
+        $phone = $this->phone;
 
         $stmt->bindParam(':landlord_id', $landlord_id, SQLITE3_INTEGER);
         $stmt->bindParam(':name', $name, SQLITE3_TEXT);
-        $stmt->bindParam(':email', $email, SQLITE3_TEXT);
+        $stmt->bindParam(':email', $email, SQLITE3_TEXT);        
+        $stmt->bindParam(':phone', $phone, SQLITE3_TEXT);
         $result = $stmt->execute();
-        return true;
+        return $result;
     }
 
     function unpack($row){
@@ -84,6 +86,9 @@ Class ServiceProvider extends DatabaseEntity{
             }
             if(isset($row['email'])){
                 $this->email = $row['email'];
+            }
+            if(isset($row['phone'])){
+                $this->phone = $row['phone'];
             }
         }
     }

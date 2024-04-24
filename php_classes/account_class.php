@@ -21,7 +21,7 @@ Class Account extends DatabaseEntity{
         }
         else{
             $db = new SQLite3('../storage/database.db');
-            $sql = 'SELECT * FROM Accounts'; //WHERE <params stuff>, maybe
+            $sql = 'SELECT * FROM Accounts'; 
             $stmt = $db->prepare($sql);
             $result = $stmt->execute();
         
@@ -90,10 +90,10 @@ Class Account extends DatabaseEntity{
         }
         $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Accounts(username, fname, lname, email, password, account_type, verified, iv) VALUES(:username, :fname, :lname, :email, :password, :account_type, :verified, :iv)';
-
+        
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;
         $username = $this->encryptUnique($this->username);
         $fname = $this->encrypt($this->fname);
@@ -118,9 +118,20 @@ Class Account extends DatabaseEntity{
         if($this->account_type == "tenant"){
             $sql = 'INSERT INTO Tenants(account_id) VALUES (:account_id)';
         }
-        else{
+        else if($this->account_type == "landlord"){
             $sql = 'INSERT INTO Landlords(account_id) VALUES (:account_id)';
         }
+        else if($this->account_type == "admin"){
+            $sql = 'INSERT INTO Admins(account_id) VALUES (:account_id)';
+        } 
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        return $result;
+    }
+    function verifyAccount() {
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Accounts SET verified = 1 WHERE account_id = :account_id';
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
         $result = $stmt->execute();
@@ -316,6 +327,26 @@ Class Landlord extends Account{
         $result = $stmt->execute();
         $row = $result->fetchArray();
         $this->landlord_id = $row['landlord_id'];
+        return true;
+    }
+}
+
+Class Admin extends Account{
+    public $admin_id;
+    function __construct($params){
+        parent::__construct($params);
+    }
+
+    function loadAccount(){
+        parent::loadAccount();
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT admin_id FROM Admins WHERE account_id=:account_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        $row = $result->fetchArray();
+        $this->admin_id = $row['admin_id'];
         return true;
     }
 }

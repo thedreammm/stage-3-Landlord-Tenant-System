@@ -17,5 +17,4 @@ $documents = $document1->loadAllDocs();
             <tr><?php echo $documents[$i]['document_id']; echo $document1->displayDocument($documents[$i]);?> </tr>
         <?php endfor;?>
     </body>
-</html>
 <?php include('../php_imports/footer.php')?>
