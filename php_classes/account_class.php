@@ -92,7 +92,7 @@ Class Account extends DatabaseEntity{
         $sql = 'INSERT INTO Accounts(username, fname, lname, email, password, account_type, verified, iv) VALUES(:username, :fname, :lname, :email, :password, :account_type, :verified, :iv)';
         
         $stmt = $db->prepare($sql);
-        echo $stmt;
+
         $iv = $this->createIV();
         $this->iv = $iv;
         $username = $this->encryptUnique($this->username);

@@ -148,7 +148,7 @@ CREATE TABLE "Reminders" (
 	"reminder_id"	INTEGER,
 	"times_sent"	INTEGER,
 	PRIMARY KEY("reminder_id" AUTOINCREMENT)
-)
+);
 
 CREATE TABLE "Rent_payments" (
 	"rent_id"	INTEGER,
@@ -161,7 +161,7 @@ CREATE TABLE "Rent_payments" (
 	"iv"	TEXT,
 	PRIMARY KEY("rent_id" AUTOINCREMENT),
 	FOREIGN KEY("reminder_id")	REFERENCES "Reminders"("reminder_id")
-)
+);
 
 CREATE TABLE "Maintenance_Requests" (
 	"maintenance_id"	INTEGER,

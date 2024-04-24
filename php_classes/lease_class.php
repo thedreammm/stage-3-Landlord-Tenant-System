@@ -5,7 +5,7 @@ Class Lease extends DatabaseEntity{
     public $lease_id, $property_id, $tenant_id, $document_id, $date_made, $status, $date_result;
 
     function __construct($params){
-        parent::__construct("Lease");
+        parent::__construct("Leases");
         $this->unpack($params);
     }
     function validInsert(){
