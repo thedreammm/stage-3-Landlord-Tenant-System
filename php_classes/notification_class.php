@@ -52,7 +52,7 @@ Class Notification extends DatabaseEntity{
 
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;        
         $landlord_id = $this->landlord_id;
         $tenant_id = $this->tenant_id;

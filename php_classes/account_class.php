@@ -105,10 +105,10 @@ Class Account extends DatabaseEntity{
         }
         $db = new SQLite3('../storage/database.db');
         $sql = 'INSERT INTO Accounts(username, fname, lname, email, password, account_type, verified, iv) VALUES(:username, :fname, :lname, :email, :password, :account_type, :verified, :iv)';
-
+        
         $stmt = $db->prepare($sql);
-
-        $iv = openssl_random_pseudo_bytes(16);
+        echo $stmt;
+        $iv = $this->createIV();
         $this->iv = $iv;
         $username = $this->encryptUnique($this->username);
         $fname = $this->encrypt($this->fname);

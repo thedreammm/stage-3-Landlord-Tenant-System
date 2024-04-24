@@ -96,19 +96,22 @@ function formToPostvars(){
 function recursiveDigest(theJSON, element){
     let name = element.getAttribute("name");
     if(element.classList.contains("form_input")){
+        console.log(1);
         theJSON[name] = element.value;
     }
     else if(element.classList.contains("sub_form")){
+        console.log(2);
         theJSON[name] = {};
         for(let i = 0; i < element.children.length; i++){
             recursiveDigest(theJSON[name], element.children[i]);
         }
     }
     else if(element.classList.contains("form_array")){
+        console.log(3);
         theJSON[name] = [];
         let j = 0;
         for(let i = 0; i < element.children.length; i++){
-            if(element.children[i].classList.contains("form_input")){
+            if(element.children[i].classList.contains("form_input") || element.children[i].classList.contains("sub_form")){
                 theJSON[name].push({});
                 recursiveDigest(theJSON[name][j], element.children[i]);
                 j+=1;
@@ -116,6 +119,7 @@ function recursiveDigest(theJSON, element){
         }
     }
     else{   //its like a generic div for styling or whatevs
+        console.log(4);
         for(let i = 0; i < element.children.length; i++){
             recursiveDigest(theJSON, element.children[i]);
         }

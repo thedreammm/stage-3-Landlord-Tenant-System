@@ -39,7 +39,7 @@ Class Message extends DatabaseEntity{
 
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;
         $room_id = $this->room_id;
         $account_id = $this->encrypt($this->account_id);

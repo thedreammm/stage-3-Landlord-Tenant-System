@@ -264,7 +264,7 @@ Class Property extends DatabaseEntity{
 
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;
         $landlord_id = $this->encryptUnique($this->landlord_id);
         $address_id = $this->encryptUnique($this->address_id);

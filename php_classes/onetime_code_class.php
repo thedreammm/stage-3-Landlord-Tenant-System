@@ -53,7 +53,7 @@ Class OnetimeCode extends databaseEntity{
         $sql = 'INSERT INTO Onetime_codes(account_id, code, iv) VALUES(:account_id, :code, :iv)';
         $stmt = $db->prepare($sql);
 
-        $iv = openssl_random_pseudo_bytes(16);
+        $iv = $this->createIV();
         $this->iv = $iv;
 
         $account_id = $this->encryptUnique($this->account_id);
