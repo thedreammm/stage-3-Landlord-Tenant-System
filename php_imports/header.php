@@ -35,7 +35,7 @@ if(isset($_SESSION['account_id'])){
     <script type="text/javascript" src="../js_imports/property.js"></script>
     
 </head>
-<body>
+<body class="bg-gray-100">
 
 <header>
     <div>
