@@ -135,7 +135,7 @@ Class RentPayment extends DatabaseEntity{
         $db = new SQLite3('../storage/database.db');
         $sql = 'UPDATE Rent_payments SET';
         if(isset($params['due_date'])){
-            if($this->date_paid || $this->due_date >= date("Y-m-d")){
+            if($this->date_paid || $this->date_due >= date("Y-m-d")){
                 return false;
             }
             $sql .= ' due_date=:due_date';
@@ -152,7 +152,7 @@ Class RentPayment extends DatabaseEntity{
         $rent_id = $this->rent_id;
         if(isset($params['due_date'])){
             $due_date = $params['due_date'];
-            $stmt->bindParam(':date_due', $date_due, SQLITE3_DATETIME);
+            $stmt->bindParam(':date_due', $date_due, SQLITE3_TEXT);
         }
         if(isset($params['cost'])){
             $cost = $this->encrypt($params['cost']);
