@@ -76,18 +76,19 @@ function sendFormJSON(element){
 function formToPostvars(){
     var post_vars = "";
     element = document.getElementsByClassName("form")[0];
-    console.log(element);
-    console.log(element.children.length);
-    var j = 0;
-    for(var i = 0; i < element.children.length; i++){
-        console.log(element.children[i].class, element.children[i].class == "form_input")
-        if(element.children[i].classList.contains("form_input")){
-            console.log(element.children[i]);
-            if(j > 0){
-                post_vars += "&";
-            }
-            post_vars += element.children[i].name + "=" + element.children[i].value;
-            j += 1;
+    post_vars = recursiveGetPostvars(post_vars, element);
+    post_vars = post_vars.substring(1);
+    return post_vars;
+}
+
+function recursiveGetPostvars(post_vars, element){
+    let name = element.getAttribute("name");
+    if(element.classList.contains("form_input")){
+        post_vars += "&" + element.name + "=" + element.value;
+    }
+    else{
+        for(let i = 0; i < element.children.length; i++){
+            post_vars = recursiveGetPostvars(post_vars, element.children[i]);
         }
     }
     return post_vars;
