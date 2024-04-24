@@ -44,11 +44,11 @@ Class Account extends DatabaseEntity{
             $stmt = $db->prepare($sql);
             $stmt->bindParam(':account_id', $this->account_id, SQLITE3_INTEGER);
             $result = $stmt->execute();
-
-            $row = $result->fetchArray();
-            
-            $this->decryptValues($row);
-            return true;
+            if($result){
+                $row = $result->fetchArray();
+                $this->decryptValues($row);
+            }
+            return $result;
         }
         else if($this->username){
             $db = new SQLite3('../storage/database.db');
@@ -59,19 +59,21 @@ Class Account extends DatabaseEntity{
             $username = $this->encryptUnique($this->username);
             $stmt->bindParam(':username', $username, SQLITE3_TEXT);
             $result = $stmt->execute();
+            if($result){
+                $row = $result->fetchArray();
 
-            $row = $result->fetchArray();
-
-            $result = false;
-            if(isset($row['password'])){
-                $result = password_verify($this->password, $row['password']);
+                $result = false;
+                if(isset($row['password'])){
+                    $result = password_verify($this->password, $row['password']);
+                }
+                if($result){    //username & password gives all its information
+                    $this->decryptValues($row);
+                }
+                else{   //only the username gives only the account_id
+                    $this->account_id = $row['account_id'];
+                }
             }
-            if($result){    //username & password gives all its information
-                $this->decryptValues($row);
-            }
-            else{   //only the username gives only the account_id
-                $this->account_id = $row['account_id'];
-            }
+            return $result;
         }
     }
 
