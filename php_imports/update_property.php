@@ -9,7 +9,6 @@ session_start();
 
 $landlord_id = $_SESSION['landlord_id'];
 $property_id = $_SESSION['edit_property'];
-unset($_SESSION['edit_property']);
 
 $form = json_decode(file_get_contents('php://input'));
 
@@ -48,6 +47,7 @@ $post_cost = array(
     'property_id'=>$property_id,
     'cost'=>$cost_obj->cost,
     'duration'=>$cost_obj->duration,
+    'period'=>$cost_obj->period,
 );
 
 $cost_obj = new Cost(false);

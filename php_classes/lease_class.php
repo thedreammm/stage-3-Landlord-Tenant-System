@@ -97,6 +97,8 @@ Class Lease extends DatabaseEntity{
     }
 
 
+
+
     function CreateLease(){
         if(!$this->validInsert()){
             return false;

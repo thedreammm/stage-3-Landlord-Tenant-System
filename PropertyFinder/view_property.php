@@ -36,14 +36,14 @@ for($i = 0; $i < count($document_array); $i++){
             <br>
         </div>
         <div id="cost" class="sub_form" name="cost">
-            <label>Cost: £<?php echo $cost1->cost; ?> per <?php echo $cost1->duration; ?> Weeks</label>
+            <label>Cost: £<?php echo $cost1->cost; ?> per <?php echo $cost1->duration; ?> <?php echo $cost1->period; ?></label>
         </div>
         <div>
             <label><?php echo $property1->square_footage; ?> Square foot</label><br>
             <label><?php echo $property1->bedrooms; ?> bedrooms</label><br>
             <label><?php echo $property1->bathrooms; ?> bathrooms</label><br>
             <label>£<?php echo $property1->deposit; ?> deposit</label><br>
-            <label><?php echo $property1->description; ?></label>
+            <label>Description:<?php echo $property1->description; ?></label>
         </div>
         <?php if(count($amenity_array)>0): ?>
         <div id="amenities" class="form_array" name="amenities">

@@ -1,4 +1,4 @@
-<?php include('databaseEntity_class.php');
+<?php require_once('databaseEntity_class.php');
 
 Class Notification extends DatabaseEntity{
     public $notification_id, $landlord_id, $tenant_id, $subject, $content, $read;

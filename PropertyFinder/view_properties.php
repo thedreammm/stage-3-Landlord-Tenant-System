@@ -39,6 +39,7 @@ if(isset($_SESSION['tenant_id'])){
                 <td><?php echo $properties_array[$i]->verified == 1 ? "verified" : "unverified"; ?></td>
                 <td><?php if(isset($_SESSION['landlord_id'])){
                     echo '<td><a href = view_property.php?pid='.$properties_array[$i]->property_id.'>View Property</a></td>';
+                    echo '<td><a href = edit_property.php?pid='.$properties_array[$i]->property_id.'>Edit Property</a></td>';
                 }?></td>
             </tr>
         <?php endfor; ?>
