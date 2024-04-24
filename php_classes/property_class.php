@@ -85,7 +85,6 @@ Class Property extends DatabaseEntity{
         return $properties;
     }
     static function loadUnVerProp(){
-        $prop_result = [];
         $db = new SQLite3('../storage/database.db');
         $sql = 'SELECT * FROM Properties WHERE verified=0';
         $stmt = $db->prepare($sql);

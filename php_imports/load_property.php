@@ -14,13 +14,7 @@ if(!session_status()){
 $property1 = new Property(false);
 $property1->property_id = $property_id;
 $property1->loadProperty();
-/*
-$landlord_id = $_SESSION['landlord_id'];
 
-$_POST['landlord_id'] = $landlord_id;
-$property1 = new Property($_POST);
-$property1->loadProperty();
-*/
 
 $address1 = new Address(false);
 $address1->address_id = $property1->address_id;

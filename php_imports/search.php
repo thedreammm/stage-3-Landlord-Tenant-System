@@ -77,7 +77,7 @@ require_once("../php_classes/amenity_class.php");
     
     $prop_array = []; 
     $prop_id_array = [];
-    if(isset($_POST['title'])){        
+    if(isset($_POST['title']) || isset($_POST['minPrice']) || isset($_POST['maxPrice']) || isset($_POST['minBedrooms']) || isset($_POST['minBathrooms']) || isset($_POST['minSqft'])){        
         $prop_array = Property::searchProperty($_POST);
         for($i=0;$i<count($prop_array);$i++){
             $prop_id_array[]=$prop_array[$i]->property_id;
@@ -122,11 +122,10 @@ require_once("../php_classes/amenity_class.php");
         
         return $filteredNumbers;
     }
-
+    $properties_array = [];
     $result_final = filterByOccurrenceCount($result_search, $x);
-
-    $properties_array = Property::searchByPID($result_final);
-    
+    if(!empty($result_final)){
+        $properties_array = Property::searchByPID($result_final);    
     
         for($i = 0; $i < count($properties_array); $i++){
 
@@ -156,6 +155,7 @@ require_once("../php_classes/amenity_class.php");
             
             
         }
+    }
    
     if(isset($_POST['title'])){ $_POST['title'] = $tInput['title'];}
     if(isset($_POST['street_address'])){ $_POST['street_address'] = $tInput['street_address'];}
