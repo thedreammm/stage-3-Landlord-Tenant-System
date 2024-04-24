@@ -35,39 +35,8 @@ Class Notification extends DatabaseEntity{
         }
         
         return $arrayResult;
-    }
-    
-    /*static function LoadNotificationTenant($tenant_id){
-        $db = new SQLite3('../storage/database.db');
-        $sql = 'SELECT * FROM Notifications WHERE tenant_id = '.$tenant_id;
-        $result = $db->query($sql);
-        
-        $arrayResult = [];
-        $i = 0;
-        while($row = $result->fetchArray()){
-            $arrayResult[$i] = new Notification(false);
-            $arrayResult[$i]->decryptValues($row); 
-            $i += 1;
-        }
-        
-        return $arrayResult;
-    }
+    }    
 
-    static function LoadNotificationLandlord($landlord_id){
-        $db = new SQLite3('../storage/database.db');
-        $sql = 'SELECT * FROM Notifications WHERE landlord_id = '.$landlord_id;
-        $result = $db->query($sql);
-
-        $arrayResult = [];
-        $i = 0;
-        while($row = $result->fetchArray()){
-            $arrayResult[$i] = new Notification(false);
-            $arrayResult[$i]->decryptValues($row); 
-            $i += 1;
-        }
-        
-        return $arrayResult;
-    }*/
 
 
 

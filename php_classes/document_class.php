@@ -41,6 +41,24 @@ Class Document extends DatabaseEntity{
         }
         return $response;
     }
+    static function loadAccDoc($account_id, $document_type){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Documents WHERE account_id=:account_id AND document_type=:document_type';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':account_id', $account_id, SQLITE3_INTEGER);
+        $stmt->bindParam(':document_type', $document_type, SQLITE3_TEXT);
+        $result = $stmt->execute();
+
+        $i = 0;
+        $document_array = array();
+        while($row = $result->fetchArray()){
+            $document_array[$i] = new Document(false);
+            $document_array[$i]->unpack($row);
+            $i+=1;
+        }
+        return $document_array;
+    }
 
     static function loadDocuments($property_id, $document_type){
         $db = new SQLite3('../storage/database.db');
