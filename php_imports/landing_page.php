@@ -9,6 +9,7 @@ require_once("../php_classes/document_class.php");
 $params = [];
 
 $properties_array = Property::loadAllProperties($params);
+$listing_array = array();
 
 for($i = 0; $i < count($properties_array); $i++){
 

@@ -2,9 +2,9 @@
 include ('../php_imports/header.php');
 require_once('../php_classes/property_class.php');
 $Text = "The website's registered properties:";
-$properties_array = [];
+$properties_array = array();
 if(isset($_SESSION['tenant_id'])){
-    header('Location: home.php');
+    header('Location: index.php');
     exit();
 } else if(isset($_SESSION['landlord_id'])){
     $properties_array = Property::loadProperties($_SESSION);

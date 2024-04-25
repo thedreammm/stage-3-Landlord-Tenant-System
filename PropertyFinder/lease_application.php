@@ -2,12 +2,14 @@
 include('../php_imports/create_lease.php');
 if(!isset($_SESSION['tenant_id'])){
     if(isset($_SESSION['landlord_id'])){
-        header('Location: home.php');
+        header('Location: index.php');
     }else{
         header("Location: signup.php");
     }
 } 
 
+$properties = [];
+$properties = Property::loadPropID();
 ?>
 
 <h1>Apply for lease</h1>
@@ -20,7 +22,7 @@ if(!isset($_SESSION['tenant_id'])){
         }?>
     </select><br>
     <input type="file" id="imageSubmission" name="imageSubmission[]" accept="image/jpeg, application/pdf" multiple><br>
-    <input type="submit" name="submit" value="submit">
+    <input type="submit" name="send_document" value="submit">
 </form>
 <span id="response"></span>
 

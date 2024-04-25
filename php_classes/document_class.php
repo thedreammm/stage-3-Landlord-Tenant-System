@@ -278,7 +278,7 @@ Class Document extends DatabaseEntity{
 
         $file_dir = '../storage/documents/' . $this->document_id . '.jpeg';
         $src = 'data: ' . 'image.jpeg' . ';base64,' . $file;
-        return '<img src="'.$src.'">';
+        return '<img src="'.$src.' " class="rounded-lg mb-4" style="width:600px; height:400px;">';
     }
 
     /*function displayDocument($params){

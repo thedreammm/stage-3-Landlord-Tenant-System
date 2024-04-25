@@ -2,7 +2,7 @@
 include ('../php_imports/header.php');
 if(!isset($_SESSION['landlord_id'])){
     if(isset($_SESSION['tenant_id'])){
-        header('Location: home.php');
+        header('Location: index.php');
     }else{
         header("Location: signup.php");
     }

@@ -1,7 +1,7 @@
 <?php include ('../php_imports/header.php');
 include ('../php_imports/edit_lease.php');
 
-if(!isset($_GET['lid'])){header('Location: home.php');};
+if(!isset($_GET['lid'])){header('Location: index.php');};
 ?>
 <h1>Manage Lease</h1>
 

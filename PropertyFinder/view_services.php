@@ -4,7 +4,7 @@ require_once("../php_classes/service_provider_class.php");
 require_once("../php_classes/account_class.php");
 if(!isset($_SESSION['landlord_id'])){
     if(isset($_SESSION['tenant_id'])){
-        header('Location: home.php');
+        header('Location: index.php');
     }else{
         header("Location: signup.php");
     }

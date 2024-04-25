@@ -9,7 +9,7 @@ function postFile(filename, destination, post_vars){
             console.log(Request.responseText);
             document.getElementById(destination).innerHTML = Request.responseText;
             if(filename == "../php_imports/create_account.php" || filename == "../php_imports/login_account.php")
-            {window.location.href = 'home.php'};            
+            {window.location.href = 'index.php'};            
         }
     }
     Request.send(post_vars);
@@ -186,5 +186,8 @@ class MessagingRoom {
 function makedisplay(id){
     var element = document.getElementById(id);
     element.type = "submit";
+
+    var element = document.getElementById("visiblesubmit");
+    element.hidden = "hidden";
     return;
 }

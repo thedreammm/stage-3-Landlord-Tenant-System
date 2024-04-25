@@ -1,7 +1,7 @@
 <?php include ('../php_imports/header.php');
 include ('../php_imports/edit_m_request.php');
 
-if(!isset($_GET['mid'])){header('Location: home.php');};
+if(!isset($_GET['mid'])){header('Location: index.php');};
 ?>
 <h1>Manage Maintenance</h1>
 

@@ -37,7 +37,33 @@ if(isset($_SESSION['account_id'])){
 </head>
 <body class="bg-gray-100">
 
-<header>
+<header class="bg-white shadow">
+    <div class="container mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="text-3xl text-red-500 font-bold">PropertyFinder</div>
+            <nav class="space-x-4 text-gray-700 text-sm sm:text-base">
+            <?php 
+            if($loggedIn == 0): ?>
+                <a href="index.php" class="no-underline hover:text-red-500">Search</a>
+                <a href="login.php" class="no-underline hover:text-red-500">Log in</a>
+                <a href="signup.php" class="no-underline hover:text-red-500">Sign up</a>
+            <?php endif;
+            if($loggedIn == 1): ?>
+                <a href="index.php" class="no-underline hover:text-red-500">Search</a>
+                <a href="messages.php" class="no-underline hover:text-red-500">Messages</a>
+                <a href="view_notifications.php" class="no-underline hover:text-red-500">Notifications</a>
+                <a href="edit_account.php" class="no-underline hover:text-red-500">Profile</a>
+            <?php endif;
+            if($loggedIn == 2): ?>
+                <a href="index.php" class="no-underline hover:text-red-500">Search</a>
+                <a href="messages.php" class="no-underline hover:text-red-500">Messages</a>
+                <a href="view_properties.php" class="no-underline hover:text-red-500">Properties</a>
+                <a href="edit_account.php" class="no-underline hover:text-red-500">Profile</a>
+            <?php endif; ?>
+            </nav>
+        </div>
+    </div>
+
     <div>
         <a>
             <h1>LTS</h1>
@@ -46,7 +72,7 @@ if(isset($_SESSION['account_id'])){
             <ul>
                 <li><a href="index.php">Splash page</a></li>
                 <li><a href="signup.php">signup</a></li>
-                <li><a href="home.php">home</a></li>
+                <li><a href="index.php">home</a></li>
                 <li><a href="login.php">login</a></li>
                 <li><a href="clear.php">Clear Session</a></li>
                 <li><a href="add_property.php">Add Property</a></li>
