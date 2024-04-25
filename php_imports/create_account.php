@@ -42,6 +42,9 @@
             $_SESSION['landlord_id'] = $landlord_id;
             $_SESSION['account_id'] = $account_id; 
         }
-}
+
+        header('location: index.php');
+    }
+
     
 ?>

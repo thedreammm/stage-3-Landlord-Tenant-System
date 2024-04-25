@@ -30,6 +30,9 @@ Class Occupancy extends DatabaseEntity{
                 $sql .= ' WHERE';
                 $add_where = false;
             }
+            else{
+                $sql .= ' AND';
+            }
             $sql .= ' beginning <= :present_date AND ending >= :present_date';
         }
         if(isset($params['tenant_id'])){
@@ -37,14 +40,20 @@ Class Occupancy extends DatabaseEntity{
                 $sql .= ' WHERE';
                 $add_where = false;
             }
-            $sql .= ' AND tenant_id = :tenant_id';
+            else{
+                $sql .= ' AND';
+            }
+            $sql .= ' tenant_id = :tenant_id';
         }
         if(isset($params['property_id'])){
             if($add_where){
                 $sql .= ' WHERE';
                 $add_where = false;
             }
-            $sql .= ' AND property_id = :property_id';
+            else{
+                $sql .= ' AND';
+            }
+            $sql .= ' property_id = :property_id';
         }
         $stmt = $db->prepare($sql);
 
@@ -63,6 +72,7 @@ Class Occupancy extends DatabaseEntity{
             $i = 0;
             while($row=$result->fetchArray()){
                 $occupancy_array[$i] = new Occupancy($row);
+                $occupancy_array[$i]->tenant_id = $row['tenant_id'];
                 $i++;
             }
         }

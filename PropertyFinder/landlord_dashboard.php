@@ -25,6 +25,10 @@ include('../php_imports/header.php');
                     <i class="fas fa-file-alt"></i>
                     <span class="mx-4 font-medium">Notifications sent</span>
                 </a>
+                <a class="flex items-center py-2 px-8 text-gray-600 hover:bg-gray-200 hover:text-gray-700 hover:border-gray-700" onclick="grabPage('view_leases')">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="mx-4 font-medium">View Leases</span>
+                </a>
             </nav>
         </div>
 

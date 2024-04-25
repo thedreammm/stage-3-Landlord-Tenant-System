@@ -9,8 +9,8 @@ if(isset($_SESSION['landlord_id'])){
 
 $occupancies_array = Occupancy::LoadOccupancies($_POST);
 
-for($i = 0; $i < count($notification_array); $i++){
-    $_POST['tenant_id'] = $occupancies_array->tenant_id;
+for($i = 0; $i < count($occupancies_array); $i++){
+    $_POST['tenant_id'] = $occupancies_array[$i]->tenant_id;
     $noti1 = new Notification($_POST);
     $noti1->CreateNotification();
 };

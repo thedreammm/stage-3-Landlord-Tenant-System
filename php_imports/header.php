@@ -51,7 +51,7 @@ if(isset($_SESSION['account_id'])){
             if($loggedIn == 1): ?>
                 <a href="index.php" class="no-underline hover:text-red-500">Search</a>
                 <a href="messages.php" class="no-underline hover:text-red-500">Messages</a>
-                <a href="view_notifications.php" class="no-underline hover:text-red-500">Notifications</a>
+                <a href="tenant_notifications.php" class="no-underline hover:text-red-500">Notifications</a>
                 <a href="edit_account.php" class="no-underline hover:text-red-500">Profile</a>
             <?php endif;
             if($loggedIn == 2): ?>
@@ -70,26 +70,10 @@ if(isset($_SESSION['account_id'])){
         </a>
         <nav>
             <ul>
-                <li><a href="index.php">Splash page</a></li>
-                <li><a href="signup.php">signup</a></li>
-                <li><a href="index.php">home</a></li>
-                <li><a href="login.php">login</a></li>
-                <li><a href="clear.php">Clear Session</a></li>
-                <li><a href="add_property.php">Add Property</a></li>
-                <li><a href="edit_property.php">Edit Property</a></li>
                 <li><a href="add_service.php">Add Service</a></li>
-                <li><a href="messages.php">Message other users</a></li>
-                <li><a href="view_accounts.php">View accounts</a></li>
-                <li><a href="maintenance_request.php">Maintenance Request</a></li>
-                <li><a href="view_all_docs.php">View all documents</a></li>
-                <li><a href="view_leases.php">View leases</a></li>
-                <li><a href="view_m_request.php">View Maintenance Request</a></li>
-                <li><a href="view_properties.php">View properties</a></li>
                 <li><a href="view_services.php">View added services</a></li>
                 <li><a href="verifyemail.php">Verify your email</a></li>
                 <li><a href="resetpassword.php">Reset your password</a></li>
-                <li><a href="upload_documents.php">Upload documents</a></li>
-                <li><a href="view_applications.php">View Applications</a></li>
                 <li><a href="add_rentpayment.php">Add Rent payments</a></li>
                 <li><a href="view_rentpayment.php">View Rent payment</a></li>
             </ul>

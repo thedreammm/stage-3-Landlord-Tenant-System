@@ -40,7 +40,7 @@ $account1->loadAccount();
 <?php if(isset($_SESSION['tenant_id'])): ?>
     <div class="container mx-auto p-8">
         <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-            <a href = "lease_application.php"><button type="button" class="w-full bg-gray-200 font-semibold py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-opacity-50">Apply for Lease</button></a>
+            <a href = "clear.php"><button type="button" class="w-full bg-gray-200 font-semibold py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-opacity-50">Log out</button></a>
             <a href = "maintenance_request.php"><button type="button" class="w-full bg-gray-200 font-semibold py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-opacity-50">Maintenance Request</button></a>
         </div>
     </div>
