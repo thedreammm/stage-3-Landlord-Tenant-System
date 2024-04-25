@@ -180,6 +180,21 @@ Class Property extends DatabaseEntity{
             return true;
         }
     }
+
+    function loadPropAsArray(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Properties WHERE property_id=:property_id';
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':property_id', $this->property_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+
+        $row = $result->fetchArray();
+            
+        $this->decryptValues($row);
+        return $this;
+            
+    }
     static function searchProperty($input){
         $db = new SQLite3('../storage/database.db');
         $sql = "SELECT * FROM Properties WHERE verified = 1";

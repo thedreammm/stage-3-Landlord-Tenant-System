@@ -35,7 +35,39 @@ Class Notification extends DatabaseEntity{
         }
         
         return $arrayResult;
-    }    
+    }
+    
+    function loadNotification(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Notifications WHERE notification_id = :notification_id';
+        
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':notification_id', $this->notification_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        if($result){
+            $row = $result->fetchArray();
+            $this->decryptValues($row);
+        }
+        
+        return $result;
+
+    }
+
+    function updatePaidNotification(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Notifications SET subject = :subject, content = :content WHERE notification_id=:notification_id';
+        $stmt = $db->prepare($sql);
+
+        $subject = $this->encrypt($this->subject);
+        $content = $this->encrypt($this->content);
+
+        $stmt->bindParam('notification_id', $this->notification_id, SQLITE3_INTEGER);
+        $stmt->bindParam(':subject', $subject, SQLITE3_TEXT);
+        $stmt->bindParam(':content', $content, SQLITE3_TEXT);
+        $result= $stmt->execute();
+        return true;
+    }
 
 
 
@@ -129,3 +161,5 @@ Class Notification extends DatabaseEntity{
         }
     }
 }
+
+

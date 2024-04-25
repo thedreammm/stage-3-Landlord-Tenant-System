@@ -144,23 +144,21 @@ CREATE TABLE "Room_participants" (
 	PRIMARY KEY("room_id","account_id")
 );
 
-CREATE TABLE "Reminders" (
-	"reminder_id"	INTEGER,
-	"times_sent"	INTEGER,
-	PRIMARY KEY("reminder_id" AUTOINCREMENT)
-);
+
 
 CREATE TABLE "Rent_payments" (
 	"rent_id"	INTEGER,
-	"property_id"	TEXT,
-	"tenant_id"	TEXT,
-	"reminder_id"	INTEGER,
+	"property_id"	INTEGER,
+	"tenant_id"	INTEGER,
+	"notification_id"	INTEGER,
 	"cost"	TEXT,
 	"date_due"	DATE,
 	"date_paid"	DATE,
 	"iv"	TEXT,
-	PRIMARY KEY("rent_id" AUTOINCREMENT),
-	FOREIGN KEY("reminder_id")	REFERENCES "Reminders"("reminder_id")
+	FOREIGN KEY("property_id") REFERENCES "Properties"("property_id"),
+	FOREIGN KEY("tenant_id") REFERENCES "Tenants"("tenant_id"),
+	FOREIGN KEY("notification_id") REFERENCES "Notifications"("notification_id"),
+	PRIMARY KEY("rent_id" AUTOINCREMENT)
 );
 
 CREATE TABLE "Maintenance_Requests" (

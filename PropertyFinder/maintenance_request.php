@@ -3,7 +3,7 @@ require_once('../php_imports/header.php');
 require_once('../php_classes/maintenance_class.php');
 require_once('../php_classes/lease_class.php');
 
-if(!isset($_SESSION['tenant_id']) || !isset($_SESSION['admin_id'])){
+if(!isset($_SESSION['tenant_id'])){
     header('Location: home.php');
     exit();
 }

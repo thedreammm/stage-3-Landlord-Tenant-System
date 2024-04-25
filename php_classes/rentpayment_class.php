@@ -2,7 +2,7 @@
 require_once("databaseEntity_class.php");
 
 Class RentPayment extends DatabaseEntity{
-    public $rent_id, $property_id, $tenant_id, $reminder_id, $cost, $date_due, $date_paid;
+    public $rent_id, $property_id, $tenant_id, $notification_id, $cost, $date_due, $date_paid;
 
     function __construct($params){
         parent::__construct("Rent_payments");
@@ -97,6 +97,18 @@ Class RentPayment extends DatabaseEntity{
             
             $this->decryptValues($row);
             return true;
+        } else if($this->notification_id){
+            $db = new SQLite3('../storage/database.db');
+            $sql = 'SELECT * FROM Rent_payments WHERE notification_id=:notification_id';
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':notification_id', $this->notification_id, SQLITE3_INTEGER);
+            $result = $stmt->execute();
+
+            $row = $result->fetchArray();
+            
+            $this->decryptValues($row);
+            return true;
         }
         return false;
     }
@@ -106,21 +118,21 @@ Class RentPayment extends DatabaseEntity{
             return false;
         }
         $db = new SQLite3('../storage/database.db');
-        $sql = 'INSERT INTO Rent_payments(property_id, tenant_id, reminder_id, cost, date_due, date_paid, iv) VALUES(:property_id, :tenant_id, :reminder_id, :cost, date(:date_due), date(:date_paid), :iv)';
+        $sql = 'INSERT INTO Rent_payments(property_id, tenant_id, notification_id, cost, date_due, date_paid, iv) VALUES(:property_id, :tenant_id, :notification_id, :cost, date(:date_due), date(:date_paid), :iv)';
         $stmt = $db->prepare($sql);
 
         $iv = $this->createIV();
         $this->iv = $iv;
         $property_id = $this->encryptUnique($this->property_id);
         $tenant_id = $this->encryptUnique($this->tenant_id);
-        $reminder_id = $this->reminder_id;
+        $notification_id = $this->notification_id;
         $cost = $this->encrypt($this->cost);    //if we don't end up 
         $date_due = $this->date_due;
         $date_paid = $this->date_paid;
 
         $stmt->bindParam(':property_id', $property_id, SQLITE3_TEXT);
         $stmt->bindParam(':tenant_id', $tenant_id, SQLITE3_TEXT);
-        $stmt->bindParam(':reminder_id', $reminder_id, SQLITE3_INTEGER);
+        $stmt->bindParam(':notification_id', $notification_id, SQLITE3_INTEGER);
         $stmt->bindParam(':cost', $cost, SQLITE3_TEXT);
         $stmt->bindParam(':date_due', $date_due, SQLITE3_TEXT);
         $stmt->bindParam(':date_paid', $date_paid, SQLITE3_TEXT);
@@ -131,11 +143,22 @@ Class RentPayment extends DatabaseEntity{
         return true;
     }
 
+    function makeRentPayment(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'UPDATE Rent_payments SET date_paid=:date_paid WHERE rent_id=:rent_id';
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':date_paid', $this->date_paid, SQLITE3_TEXT);
+        $stmt->bindParam(':rent_id', $this->rent_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        return true;
+    }
+
     function updateRentPayment($params){
         $db = new SQLite3('../storage/database.db');
         $sql = 'UPDATE Rent_payments SET';
         if(isset($params['due_date'])){
-            if($this->date_paid || $this->due_date >= date("Y-m-d")){
+            if($this->date_paid || $this->date_due >= date("Y-m-d")){
                 return false;
             }
             $sql .= ' due_date=:due_date';
@@ -152,7 +175,7 @@ Class RentPayment extends DatabaseEntity{
         $rent_id = $this->rent_id;
         if(isset($params['due_date'])){
             $due_date = $params['due_date'];
-            $stmt->bindParam(':date_due', $date_due, SQLITE3_DATETIME);
+            $stmt->bindParam(':date_due', $date_due, SQLITE3_TEXT);
         }
         if(isset($params['cost'])){
             $cost = $this->encrypt($params['cost']);
@@ -175,8 +198,8 @@ Class RentPayment extends DatabaseEntity{
             if(isset($row['tenant_id'])){
                 $this->tenant_id = $row['tenant_id'];
             }
-            if(isset($row['reminder_id'])){
-                $this->reminder_id = $row['reminder_id'];
+            if(isset($row['notification_id'])){
+                $this->notification_id = $row['notification_id'];
             }
             if(isset($row['cost'])){
                 $this->cost = $row['cost'];
@@ -198,8 +221,8 @@ Class RentPayment extends DatabaseEntity{
             if(isset($row['rent_id'])){
                 $this->rent_id = $row['rent_id'];
             }
-            if(isset($row['reminder_id'])){
-                $this->reminder_id = $row['reminder_id'];
+            if(isset($row['notification_id'])){
+                $this->notification_id = $row['notification_id'];
             }
             if(isset($row['date_due'])){
                 $this->date_due = $row['date_due'];
