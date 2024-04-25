@@ -134,12 +134,12 @@ Class Property extends DatabaseEntity{
             $result = $stmt->execute();
         }
 
-            $i = 0;
-            while($row = $result->fetchArray()){
-                $properties_array[$i] = new Property(false);
-                $properties_array[$i]->decryptValues($row);
-                $i += 1;
-            }
+        $i = 0;
+        while($row = $result->fetchArray()){
+            $properties_array[$i] = new Property(false);
+            $properties_array[$i]->decryptValues($row);
+            $i += 1;
+        }
         
         return $properties_array;
     }

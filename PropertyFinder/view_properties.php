@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('../php_classes/property_class.php');
 $Text = "The website's registered properties:";
 $properties_array = array();

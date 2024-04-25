@@ -1,4 +1,5 @@
-<?php include ('../php_imports/header.php');
+<?php
+session_start();
 include ('../php_imports/edit_m_request.php');
 
 if(!isset($_GET['mid'])){header('Location: index.php');};
