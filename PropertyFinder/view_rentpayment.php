@@ -1,5 +1,5 @@
 <?php
-include ('../php_imports/header.php');
+session_start();
 require_once('../php_classes/rentpayment_class.php');
 if(isset($_SESSION['landlord_id'])):
     ?>

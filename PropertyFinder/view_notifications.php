@@ -1,4 +1,6 @@
-<?php include ('../php_imports/header.php');
+<?php 
+
+session_start();
 include('../php_imports/load_notification.php');
 require_once("../php_classes/account_class.php");
     

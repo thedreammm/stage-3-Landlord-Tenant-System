@@ -1,4 +1,5 @@
-<?php include ('../php_imports/header.php');
+<?php
+session_start();
 include('../php_imports/load_m_request.php');?>
 
 

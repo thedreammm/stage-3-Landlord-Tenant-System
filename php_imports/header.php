@@ -57,7 +57,7 @@ if(isset($_SESSION['account_id'])){
             if($loggedIn == 2): ?>
                 <a href="index.php" class="no-underline hover:text-red-500">Search</a>
                 <a href="messages.php" class="no-underline hover:text-red-500">Messages</a>
-                <a href="view_properties.php" class="no-underline hover:text-red-500">Properties</a>
+                <a href="landlord_dashboard.php" class="no-underline hover:text-red-500">Properties</a>
                 <a href="edit_account.php" class="no-underline hover:text-red-500">Profile</a>
             <?php endif; ?>
             </nav>

@@ -191,3 +191,10 @@ function makedisplay(id){
     element.hidden = "hidden";
     return;
 }
+
+function grabPage(pageName){
+    var filename = pageName + ".php";
+    var destination = "content";
+    var post_vars = "";
+    postFile(filename, destination, post_vars);
+}
