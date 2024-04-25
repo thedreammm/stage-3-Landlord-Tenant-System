@@ -37,37 +37,38 @@ Class Notification extends DatabaseEntity{
         return $arrayResult;
     }
     
-    /*static function LoadNotificationTenant($tenant_id){
+    function loadNotification(){
         $db = new SQLite3('../storage/database.db');
-        $sql = 'SELECT * FROM Notifications WHERE tenant_id = '.$tenant_id;
-        $result = $db->query($sql);
+        $sql = 'SELECT * FROM Notifications WHERE notification_id = :notification_id';
         
-        $arrayResult = [];
-        $i = 0;
-        while($row = $result->fetchArray()){
-            $arrayResult[$i] = new Notification(false);
-            $arrayResult[$i]->decryptValues($row); 
-            $i += 1;
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':notification_id', $this->notification_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        if($result){
+            $row = $result->fetchArray();
+            $this->decryptValues($row);
         }
         
-        return $arrayResult;
+        return $result;
+
     }
 
-    static function LoadNotificationLandlord($landlord_id){
+    function updatePaidNotification(){
         $db = new SQLite3('../storage/database.db');
-        $sql = 'SELECT * FROM Notifications WHERE landlord_id = '.$landlord_id;
-        $result = $db->query($sql);
+        $sql = 'UPDATE Notifications SET subject = :subject, content = :content WHERE notification_id=:notification_id';
+        $stmt = $db->prepare($sql);
 
-        $arrayResult = [];
-        $i = 0;
-        while($row = $result->fetchArray()){
-            $arrayResult[$i] = new Notification(false);
-            $arrayResult[$i]->decryptValues($row); 
-            $i += 1;
-        }
-        
-        return $arrayResult;
-    }*/
+        $subject = $this->encrypt($this->subject);
+        $content = $this->encrypt($this->content);
+
+        $stmt->bindParam('notification_id', $this->notification_id, SQLITE3_INTEGER);
+        $stmt->bindParam(':subject', $subject, SQLITE3_TEXT);
+        $stmt->bindParam(':content', $content, SQLITE3_TEXT);
+        $result= $stmt->execute();
+        return true;
+    }
+
 
 
 
@@ -159,3 +160,5 @@ Class Notification extends DatabaseEntity{
         }
     }
 }
+
+

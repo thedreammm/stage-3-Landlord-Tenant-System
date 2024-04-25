@@ -55,6 +55,20 @@ Class Lease extends DatabaseEntity{
         return $lease_array;
     }
 
+    function leaseObj(){
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Leases WHERE tenant_id=:tenant_id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':tenant_id', $this->tenant_id, SQLITE3_INTEGER);
+        $result = $stmt->execute();
+        if($result){
+            $row = $result->fetchArray();
+            $this->unpack($row);
+        }
+        return $result;
+
+    }
+
     static function getLeaseByID($LID){
         $db = new SQLite3('../storage/database.db');
         $sql = 'SELECT * FROM Leases WHERE lease_id='.$LID;

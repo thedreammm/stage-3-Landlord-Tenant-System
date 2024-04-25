@@ -9,6 +9,21 @@ Class Account extends DatabaseEntity{
         $this->unpack($params);
     }
 
+    static function loadUnVerAcc(){
+        $unverAccs = [];
+        $db = new SQLite3("../storage/database.db");
+        $sql = "SELECT * FROM Accounts WHERE verified = 0";
+        $stmt = $db->prepare($sql);
+        $result = $stmt->execute();
+        $i = 0;
+        while($row = $result->fetchArray(SQLITE3_ASSOC)){
+            $unverAccs[$i] = new Account(false); 
+            $unverAccs[$i]->decryptValues($row);
+            $i+=1;
+        }
+        return $unverAccs;
+    }
+
     static function loadAccounts($params){
         $accounts_array = array();
         if(isset($params['usernames'])){
@@ -281,8 +296,12 @@ Class Tenant extends Account{
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':tenant_id', $this->tenant_id, SQLITE3_INTEGER);
         $result = $stmt->execute();
-        $row = $result->fetchArray();
-        $this->account_id = $row['account_id'];
+        if (!$result) {
+            die("Failed to execute the SQL query.".$this->tenant_id);
+        }
+        $row = $result->fetchArray(SQLITE3_ASSOC);
+        
+        $this->decryptValues($row);
         parent::loadAccount();
         return true;
     }
