@@ -29,34 +29,34 @@ Class Property extends DatabaseEntity{
     }
 
     static function searchPropByAdds($addressIds) {
-    $db = new SQLite3('../storage/database.db');
-    $sql = "SELECT * FROM Properties WHERE verified = 1";
-    if (!empty($addressIds)) {
-        $placeholders = implode(' OR ', array_fill(0, count($addressIds), 'address_id = ?'));
-        $sql .= " AND (" . $placeholders . ")";
+        $db = new SQLite3('../storage/database.db');
+        $sql = "SELECT * FROM Properties WHERE verified = 1";
+        if (!empty($addressIds)) {
+            $placeholders = implode(' OR ', array_fill(0, count($addressIds), 'address_id = ?'));
+            $sql .= " AND (" . $placeholders . ")";
+        }
+
+        $stmt = $db->prepare($sql);
+        $obj = new Property(false);
+
+        foreach ($addressIds as $key => $addressId) {
+            $addressInp = $obj->encryptUnique($addressId);
+            $stmt->bindValue($key, $addressInp, SQLITE3_TEXT); 
+        }
+
+        $result = $stmt->execute();
+
+        $properties = [];
+        $i = 0;
+        while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+            $property = new Property(false);
+            $property->decryptValues($row);
+            $properties[] = $property->property_id;
+            $i+=1;
+        }
+
+        return $properties;
     }
-
-    $stmt = $db->prepare($sql);
-    $obj = new Property(false);
-
-    foreach ($addressIds as $key => $addressId) {
-        $addressInp = $obj->encryptUnique($addressId);
-        $stmt->bindValue($key, $addressInp, SQLITE3_TEXT); 
-    }
-
-    $result = $stmt->execute();
-
-    $properties = [];
-    $i = 0;
-    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
-        $property = new Property(false);
-        $property->decryptValues($row);
-        $properties[] = $property->property_id;
-        $i+=1;
-    }
-
-    return $properties;
-}
 
     static function searchByPID($PID) {
         $db = new SQLite3('../storage/database.db');   
@@ -155,12 +155,12 @@ Class Property extends DatabaseEntity{
             $result = $stmt->execute();
         }
 
-            $i = 0;
-            while($row = $result->fetchArray()){
-                $properties_array[$i] = new Property(false);
-                $properties_array[$i]->decryptValues($row);
-                $i += 1;
-            }
+        $i = 0;
+        while($row = $result->fetchArray()){
+            $properties_array[$i] = new Property(false);
+            $properties_array[$i]->decryptValues($row);
+            $i += 1;
+        }
         
         return $properties_array;
     }

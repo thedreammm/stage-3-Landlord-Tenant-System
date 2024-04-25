@@ -72,8 +72,7 @@ Class Notification extends DatabaseEntity{
 
 
 
-    function CreateNotification($tenant_id){
-        $this->tenant_id = $tenant_id;
+    function CreateNotification(){
         if(!$this->validInsert()){
             return false;
         }         

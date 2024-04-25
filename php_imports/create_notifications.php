@@ -1,18 +1,16 @@
-<?php require_once("../php_classes/notification_class.php");
+<?php 
+require_once("../php_classes/notification_class.php");
+require_once("../php_classes/occupancy_class.php");
 
 session_start();
-$_POST['landlord_id'] = $_SESSION['landlord_id'];
-$pID = $_POST['property_id'];
-unset($_POST['property_id']);
-
-$db = new SQLite3('../storage/database.db');
-$result = $db->query("SELECT tenant_id FROM Lease_Test WHERE property_id = '$pID'");
-$tIDArray = [];
-while($row = $result->fetchArray(SQLITE3_ASSOC)){
-    $tIDArray[]=$row['tenant_id'];
+if(isset($_SESSION['landlord_id'])){
+    $_POST['landlord_id'] = $_SESSION['landlord_id'];
 }
 
-$noti1 = new Notification($_POST);
-foreach($tIDArray as $tID){
-    $noti1->CreateNotification($tID);
+$occupancies_array = Occupancy::LoadOccupancies($_POST);
+
+for($i = 0; $i < count($occupancies_array); $i++){
+    $_POST['tenant_id'] = $occupancies_array[$i]->tenant_id;
+    $noti1 = new Notification($_POST);
+    $noti1->CreateNotification();
 };

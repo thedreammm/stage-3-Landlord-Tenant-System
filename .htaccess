@@ -3,4 +3,4 @@
 
 #RewriteCond "%{REQUEST_URI}" "!js_imports/" 
 #RewriteCond "%{REQUEST_URI}" "!php_imports/" 
-#RewriteRule "!PropertyFinder/" "/stage 3/stage-3-Landlord-Tenant-System/PropertyFinder/home.php" [R=302]
+#RewriteRule "!PropertyFinder/" "/stage 3/stage-3-Landlord-Tenant-System/PropertyFinder/index.php" [R=302]

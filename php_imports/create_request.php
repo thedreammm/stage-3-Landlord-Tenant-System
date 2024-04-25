@@ -21,5 +21,5 @@ if(isset($_POST['submit'])){
 }
 ?>
     <div><?php echo $message?></div> 
-    <div><a href="../PropertyFinder/home.php">Go home</a></div>
+    <div><a href="../PropertyFinder/index.php">Go home</a></div>
 <?php include("footer.php") ?>

@@ -17,6 +17,67 @@ Class Occupancy extends DatabaseEntity{
         }
     }
 
+    static function loadOccupancies($params){
+        $occupancy_array = array();
+        $present_date = date('Y-m-d');
+
+        $db = new SQLite3('../storage/database.db');
+        $sql = 'SELECT * FROM Occupancies INNER JOIN Leases ON Occupancies.lease_id = Leases.lease_id';
+        $add_where = true;
+
+        if(isset($params['active']) && $params['active'] == true){
+            if($add_where){
+                $sql .= ' WHERE';
+                $add_where = false;
+            }
+            else{
+                $sql .= ' AND';
+            }
+            $sql .= ' beginning <= :present_date AND ending >= :present_date';
+        }
+        if(isset($params['tenant_id'])){
+            if($add_where){
+                $sql .= ' WHERE';
+                $add_where = false;
+            }
+            else{
+                $sql .= ' AND';
+            }
+            $sql .= ' tenant_id = :tenant_id';
+        }
+        if(isset($params['property_id'])){
+            if($add_where){
+                $sql .= ' WHERE';
+                $add_where = false;
+            }
+            else{
+                $sql .= ' AND';
+            }
+            $sql .= ' property_id = :property_id';
+        }
+        $stmt = $db->prepare($sql);
+
+        if(isset($params['active']) && $params['active'] == true){
+            $stmt->bindParam(':present_date', $present_date, SQLITE3_TEXT);
+        }
+        if(isset($params['tenant_id'])){
+            $stmt->bindParam(':tenant_id', $params['tenant_id'], SQLITE3_INTEGER);
+        }
+        if(isset($params['property_id'])){
+            $stmt->bindParam(':property_id', $params['property_id'], SQLITE3_INTEGER);
+        }
+
+        $result = $stmt->execute(); 
+        if($result){
+            $i = 0;
+            while($row=$result->fetchArray()){
+                $occupancy_array[$i] = new Occupancy($row);
+                $occupancy_array[$i]->tenant_id = $row['tenant_id'];
+                $i++;
+            }
+        }
+        return $occupancy_array;
+    }
 
     function CreateOccupancy(){
         if(!$this->validInsert()){
@@ -35,8 +96,8 @@ Class Occupancy extends DatabaseEntity{
         return $result;
     }
     function loadOccupancy(){
-        $occupancy_array = array();
-        $db = new SQLite3('../storage/database.db');        
+        $db = new SQLite3('../storage/database.db');     
+        $result = false;   
         if($this->occupancy_id){
             
             $sql = 'SELECT * FROM Occupancies WHERE occupancy_id=:occupancy_id';
@@ -51,19 +112,7 @@ Class Occupancy extends DatabaseEntity{
             $stmt->bindParam(':lease_id', $this->lease_id, SQLITE3_INTEGER);
             $result = $stmt->execute();
         }
-        else
-        {
-            $sql = 'SELECT * FROM Occupancies';
-            $stmt = $db->prepare($sql);
-            $result = $stmt->execute();        
-        }
-        $i = 0;
-            while($row=$result->fetchArray()){
-                $occupancy_array[$i] = new Occupancy(false);
-                $occupancy_array[$i]->unpack($row);
-                $i++;
-            }
-        return $occupancy_array;
+        return $result;
     }
 
     static function GetOccupancyByID($LID){
