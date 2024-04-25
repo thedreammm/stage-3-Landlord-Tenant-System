@@ -58,6 +58,8 @@ else
         <table>
             <thead>
                 <tr>
+                <?php if(isset($_SESSION['landlord_id'])):?>
+                    <th>Tenant</th> <?php endif;?>
                     <th>Subject</th>
                     <th>Message</th>                        
                 </tr>
@@ -66,8 +68,13 @@ else
                 <?php if(isset($result) && is_array($result)): ?>
                     <?php foreach ($result as $notification): ?>
                         <tr>
+                        <?php if(isset($_SESSION['landlord_id'])):?>
+                            <td><?php echo $notification->tenant_id?></td> <?php endif;?>
                             <td><?php echo htmlspecialchars($notification->subject); ?></td>
                             <td><?php echo htmlspecialchars($notification->content); ?></td>
+                            <?php if($notification->subject === "Rent Due" && isset($_SESSION['tenant_id'])):?>
+                                <td><a href = <?php echo 'pay_rent.php?nid='.$notification->notification_id?>>Pay Rent?</a></td>
+                                <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>

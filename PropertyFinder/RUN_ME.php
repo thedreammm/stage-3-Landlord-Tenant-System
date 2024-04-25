@@ -103,6 +103,8 @@ $keysData = '{
     "Service_providers": "adadwaerr123",
     "Leases":"asdq3nmp3",
     "Occupancies":"asdq213jpi0",
+    "Reminders":"assw231345t",
+    "Rent_payments":"12boad234",
     "Maintenance_Requests":"binjqug8y21",
     "static_iv":"usernameusername"
 }';
